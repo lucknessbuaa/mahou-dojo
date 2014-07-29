@@ -11,7 +11,8 @@
   "dependencies": {
     "underscore": "~1.6.0",
     "morgan": "~1.2.2",
-    "express": "~4.7.2"
+    "express": "~4.7.2",
+    "minimist": "~0.2.0"
   },
   "devDependencies": {
     "requirejs": "~2.1.14",
