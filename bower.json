@@ -17,6 +17,9 @@
     "zeptojs": "~1.1.4",
     "ratchet": "~2.0.2",
     "requirejs": "~2.1.14",
-    "zepto": "~1.1.4"
+    "zepto": "~1.1.4",
+    "velocity": "~0.10.0",
+    "node-uuid": "~1.4.1",
+    "moment": "~2.8.0"
   }
 }

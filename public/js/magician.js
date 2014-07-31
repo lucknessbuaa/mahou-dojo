@@ -1,9 +1,26 @@
 define(function(require) {
-    require("zepto");
+    require("jquery");
+    require("velocity");
+    var token = require("js/token");
     var io = require("socket-io");
 
     var host = 'localhost:4000';
     var socket = io.connect('http://' + host + '/show');
+
+    function score(magicianId, score) {
+        function sendScore(magicianId, score) {
+            socket.emit('score', {
+                token: token,
+                magicianId: magicianId,
+                score: score
+            });
+        }
+
+        var scores = JSON.parse(localstorage.getItem('scores-' + token));
+        scores[String(magicianId)] = score;
+        localstorage.setItem(JSON.stringify(scores));
+        sendScore(magicianId, score);
+    }
 
     var SHOW_WAITING = 'waiting';
     var SHOW_PLAYING = 'playing';
@@ -15,20 +32,68 @@ define(function(require) {
     var MAGICIAN_SCORE = 'score';
     var MAGICIAN_FINISHED = 'finished';
 
-    var $timer, $show;
+    var timer, $show;
     var magician;
     var showStatus;
 
     function onWait() {
-        $timer.show();
+        // FIXME
     }
 
+    function Timer(el) {
+        this.el = el;
+        this.$el = $(el);
+        this.$inner = this.$el.find(".timer-inner");
+
+        setInterval(this.ensure.bind(this), 1000);
+    }
+
+    Timer.prototype.ensure = function() {
+        if (!this.type) {
+            return this.$inner.empty();
+        }
+
+        var now = new Date();
+        var seconds, minutes;
+        if (this.time < now.getTime()) {
+            seconds = 0;
+            minutes = 0;
+        } else {
+            seconds = Math.floor(this.time - now.getTime() / 1000);
+            minutes = Math.floor(seconds / 60) % 60;
+            seconds = seconds % 60;
+        }
+
+        this.$inner.html(this.pad(minutes) + ":" + this.pad(seconds));
+    };
+
+    Timer.prototype.pad = function(number) {
+        return number < 10 ? '0' + number : String(number);
+    }
+
+    Timer.prototype.timing = function(type, time) {
+        this.el.className = 'timer ' + type;
+        this.type = type;
+        this.time = time;
+    };
+
     function onPlay(show) {
-        $timer.hide();
         showStatus = show.status;
         magician = show.magician;
-        $show.find('.magician-avatar').attr('src', magician.avatar);
+        $show.find('.magician-avatar').hide()
+            .attr('src', magician.avatar).velocity('fadeIn');
         $show.find('.magician-name').html(magician.name);
+
+        if (magician.status === MAGICIAN_WAITING) {
+            timer.timing('wait', magician.start);
+        } else if (magician.status === MAGICIAN_PLAYING) {
+            timer.timing('playing', magician.score);
+        } else if (magician.status === MAGICIAN_SCORE) {
+            timer.timing('score', magician.end);
+        } else {
+            // TODO on magician finished
+        }
+
         $show.show();
     }
 
@@ -41,7 +106,7 @@ define(function(require) {
     }
 
     $(function() {
-        $timer = $("#timer");
+        timer = new Timer($(".timer")[0]);
         $show = $("#show");
 
         socket.on('connect', function() {

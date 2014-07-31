@@ -7,57 +7,61 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<div class="content">
-    
-    <div id="timer" style="display: none;"></div>
-    <div id="show" style="display: none;">
-        <div class="magician">
-            <div class="accuracy-wording">准确率</div>
-            <div class="accuracy-percent">67%</div>
-            <div class="progress-bar">
-                <div class="frontend"></div>
+    <div class="content">
+        <div id="show" style="display: none;">
+            <div class='timer'>
+                <div class="timer-inner"></div>
+                <div class='timer-tip'></div>
             </div>
-            <div class="mood">
-                <img class='magician-avatar'></img>
-                <div class='magician-avatar-light'></div>
-                <div class="name-wrapper">
-                    <div class='magician-name'></div>
+            <div class="magician">
+                <div class="accuracy-wording">准确率</div>
+                <div class="accuracy-percent">67%</div>
+                <div class="progress-bar">
+                    <div class="frontend"></div>
+                </div>
+                <div class="mood">
+                    <img class='magician-avatar'></img>
+                    <div class='magician-avatar-light'></div>
+                    <div class="name-wrapper">
+                        <div class='magician-name'></div>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="cards">
-            <div class="card ace"></div>
-            <div class="card three"></div>
-            <div class="card five"></div>
-            <div class="card seven"></div>
-            <div class="card nine"></div>
-            <div class="card jack"></div>
-            <div class="card king"></div>
-        </div>
-
-        <div class="judge-list">
-            <div class="judge">
-                <div class="avatar">
-                    <img src="/img/judge_1.png" alt="">
-                </div>
+            <div class="cards">
                 <div class="card ace"></div>
-            </div>
-            <div class="judge">
-                <div class="avatar">
-                    <img src="/img/judge_2.png" alt="">
-                </div>
+                <div class="card three"></div>
+                <div class="card five"></div>
+                <div class="card seven"></div>
+                <div class="card nine"></div>
+                <div class="card jack"></div>
                 <div class="card king"></div>
             </div>
-            <div class="judge">
-                <div class="avatar">
-                    <img src="/img/judge_3.png" alt="">
+
+            <div class="judge-list">
+                <div class="judge">
+                    <div class="avatar">
+                        <img src="/img/judge_1.png" alt="">
+                    </div>
+                    <div class="card ace"></div>
                 </div>
-                <div class="card three"></div>
+                <div class="judge">
+                    <div class="avatar">
+                        <img src="/img/judge_2.png" alt="">
+                    </div>
+                    <div class="card king"></div>
+                </div>
+                <div class="judge">
+                    <div class="avatar">
+                        <img src="/img/judge_3.png" alt="">
+                    </div>
+                    <div class="card three close">
+                        <div class="state"></div>
+                    </div>
+                </div>
             </div>
         </div>
+        <div id="analysis" style="display: none;"></div>
     </div>
-    <div id="analysis" style="display: none;"></div>
-</div>
 
     <script type="text/javascript" src="/js/require.config.js"></script>
     <script type="text/javascript" src="/components/requirejs/require.js"></script>
