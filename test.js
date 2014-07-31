@@ -1,6 +1,9 @@
 var assert = require("assert");
+var _ = require("underscore");
 var Show = require("./lib/show");
-var _date = require("./lib/datetime")(2014, 6, 31);
+var datetime = require("./lib/datetime");
+
+var _date = _.partial(datetime, 2014, 7, 31);
 
 var magicianA = {
     name: 'A',
@@ -14,7 +17,7 @@ var round = {
     start: _date(8),
     magicians: [magicianA, {
         name: 'B',
-        start: _date(8, 6),
+        start: _date(8, 7),
         score: _date(8, 8),
         end: _date(8, 10),
         scores: [Show.THREE, Show.KING, Show.ACE]
@@ -45,25 +48,37 @@ describe('Magician', function() {
     var Magician = Show.Magician;
 
     describe('#constructor', function() {
-        var magician = new Magician(magicianA, _date(7, 55));
-        assert.strictEqual(magician.status, Magician.STATUS_WAITING);
+        it('should switch to the right status when initialized', function() {
+            var magician = new Magician(magicianA, _date(7, 55));
+            assert.strictEqual(magician.status, Magician.STATUS_WAITING);
 
-        magician = new Magician(magicianA, _date(8, 6));
-        assert.strictEqual(magician.status, Magician.STATUS_FINISHED);
+            magician = new Magician(magicianA, _date(8, 6));
+            assert.strictEqual(magician.status, Magician.STATUS_FINISHED);
 
-        magician = new Magician(magicianA, _date(8, 2));
-        assert.strictEqual(magician.status, Magician.STATUS_PLAYING);
+            magician = new Magician(magicianA, _date(8, 2));
+            assert.strictEqual(magician.status, Magician.STATUS_PLAYING);
 
-        magician = new Magician(magicianA, _date(8, 4));
-        assert.strictEqual(magician.status, Magician.STATUS_SCORE);
+            magician = new Magician(magicianA, _date(8, 4));
+            assert.strictEqual(magician.status, Magician.STATUS_SCORE);
+        });
     });
 
-    /*
     describe('#loop', function() {
-        var magician = new Magician(magicianA, _date(7, 55));
-        magician.loop(_date(8, ));
+        it('should swith to the right status when time is flying', function() {
+            var magician = new Magician(magicianA, _date(7, 55));
+            magician.loop(_date(8, 0));
+            assert.strictEqual(magician.status, Magician.STATUS_WAITING);
+
+            magician.loop(_date(8, 2));
+            assert.strictEqual(magician.status, Magician.STATUS_PLAYING);
+
+            magician.loop(_date(8, 4));
+            assert.strictEqual(magician.status, Magician.STATUS_SCORE);
+
+            magician.loop(_date(8, 6));
+            assert.strictEqual(magician.status, Magician.STATUS_FINISHED);
+        });
     });
-*/
 });
 
 describe('Show', function() {
@@ -102,9 +117,53 @@ describe('Show', function() {
             show.loop(_date(8, 15));
             assert.strictEqual(show.showStatus, Show.SHOW_PLAYING);
 
-            show.loop(_date(8, 15, 1));
+            show.loop(_date(8, 28));
+            assert.strictEqual(show.showStatus, Show.SHOW_SCORE);
+
+            show.loop(_date(8, 30));
+            assert.strictEqual(show.showStatus, Show.SHOW_FINISHED);
+        });
+
+        it("should switch to the right magician when the show is playing", function() {
+            var show = new Show(round, _date(7, 55));
+            assert.strictEqual(show.showStatus, Show.SHOW_WAITING);
+
+            show.loop(_date(8, 0));
             assert.strictEqual(show.showStatus, Show.SHOW_PLAYING);
-            assert.strictEqual(show.magician, show.magicians[2]);
+
+            // wait
+            show.loop(_date(8, 0, 1));
+            assert.strictEqual(show.showStatus, Show.SHOW_PLAYING);
+            assert.strictEqual(show.magician, show.magicians[0]);
+            assert.strictEqual(show.magician.status, Show.Magician.STATUS_WAITING);
+
+            // play
+            show.loop(_date(8, 2));
+            assert.strictEqual(show.showStatus, Show.SHOW_PLAYING);
+            assert.strictEqual(show.magician, show.magicians[0]);
+            assert.strictEqual(show.magician.status, Show.Magician.STATUS_PLAYING);
+
+            // score
+            show.loop(_date(8, 4));
+            assert.strictEqual(show.showStatus, Show.SHOW_PLAYING);
+            assert.strictEqual(show.magician, show.magicians[0]);
+            assert.strictEqual(show.magician.status, Show.Magician.STATUS_SCORE);
+
+            // finish
+            show.loop(_date(8, 6));
+            assert.strictEqual(show.showStatus, Show.SHOW_PLAYING);
+            assert.strictEqual(show.magicians[0].status, Show.Magician.STATUS_FINISHED);
+            assert.strictEqual(show.magician, null);
+
+            // next
+            show.loop(_date(8, 6, 1));
+            assert.strictEqual(show.showStatus, Show.SHOW_PLAYING);
+            assert.strictEqual(show.magician, show.magicians[1]);
+            assert.strictEqual(show.magician.status, Show.Magician.STATUS_WAITING);
+
+            // after the last magician
+            show.loop(_date(8, 28));
+            assert.strictEqual(show.showStatus, Show.SHOW_SCORE);
         });
     });
 });
