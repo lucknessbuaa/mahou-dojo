@@ -6,7 +6,7 @@ var Show = require("./lib/show");
 
 var CURRENT_ROUND = 0;
 var _date = function(minutes) {
-    return datetime(2014, 7, 31, 13, 31 + minutes);
+    return datetime(2014, 7, 31, 20, 31 + minutes);
 }
 
 var UNIT = 30;
@@ -16,30 +16,35 @@ var round = {
     magicians: [{
         name: 'A',
         start: _date(1 * UNIT),
+                    avatar: '/img/magician-avatar.jpeg',
         score: _date(2 * UNIT),
         end: _date(3 * UNIT),
         scores: [Show.ACE, Show.THREE, Show.KING]
     }, {
         name: 'B',
         start: _date(4 * UNIT),
+                    avatar: '/img/magician-avatar.jpeg',
         score: _date(5 * UNIT),
         end: _date(6 * UNIT),
         scores: [Show.THREE, Show.KING, Show.ACE]
     }, {
         name: 'C',
         start: _date(7 * UNIT),
+                    avatar: '/img/magician-avatar.jpeg',
         score: _date(8 * UNIT),
         end: _date(9 * UNIT),
         scores: [Show.FIVE, Show.SEVEN, Show.THREE]
     }, {
         name: 'D',
         start: _date(10 * UNIT),
+                    avatar: '/img/magician-avatar.jpeg',
         score: _date(11 * UNIT),
         end: _date(12 * UNIT),
         scores: [Show.SEVEN, Show.ACE, Show.FIVE]
     }, {
         name: 'E',
         start: _date(13 * UNIT),
+                    avatar: '/img/magician-avatar.jpeg',
         score: _date(14 * UNIT),
         end: _date(15 * UNIT),
         scores: [Show.NINE, Show.JACK, Show.SEVEN]
