@@ -14,9 +14,10 @@
     margin-right: auto;
 }
 
-.content {
+@mixin size($width, $height) {
+    width: $width;
+    height: $height;
 }
-
 
 #show {
     background: url(../img/bg.png) left top no-repeat;
@@ -25,6 +26,47 @@
 
     @media (min-width: 360px) {
         padding-top: 100px;
+    }
+
+    .timer {
+        $timer-width: 99px;
+        $timer-height: 66px;
+        @include size($timer-width, $timer-height);
+        position: absolute;
+        top: 0px;
+        left: 50%;
+        margin-left: -$timer_width/2;
+        background: url(../img/timer_bg.png) center center no-repeat;
+        background-size: contain;
+
+        .timer-inner {
+            position: absolute;
+            bottom: 13px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .timer-tip {
+            position: absolute;
+            bottom: 7px;
+            width: 100%;
+            height: 20px;
+        }
+
+        &.wait .timer-tip {
+            background: url(../img/timer-tip-wait.png) center bottom no-repeat;
+            background-size: 80%;
+        }
+            
+        &.playing .timer-tip {
+            background: url(../img/timer-tip-playing.png) center bottom no-repeat;
+            background-size: 80%;
+        }
+
+        &.final .timer-tip {
+            background: url(../img/timer-tip-final.png) center bottom no-repeat;
+            background-size: 80%;
+        }
     }
 
     .magician {
@@ -135,6 +177,11 @@
         height: $width + 18px;
         background: url(../img/#{$score}.png) center center no-repeat;
         background-size: $card-width - 10 ($card-width - 10) * 1.4;
+
+        &.close {
+            background: url(../img/mask.png) center center no-repeat;
+            background-size: $card-width - 10 ($card-width - 10) * 1.4;
+        }
     }
     
 

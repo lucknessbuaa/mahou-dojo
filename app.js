@@ -14,6 +14,7 @@ var UNIT = 30;
 var round = {
     start: _date(0),
     magicians: [{
+        id: 0,
         name: 'A',
         start: _date(1 * UNIT),
                     avatar: '/img/magician-avatar.jpeg',
@@ -21,6 +22,7 @@ var round = {
         end: _date(3 * UNIT),
         scores: [Show.ACE, Show.THREE, Show.KING]
     }, {
+        id: 1,
         name: 'B',
         start: _date(4 * UNIT),
                     avatar: '/img/magician-avatar.jpeg',
@@ -28,6 +30,7 @@ var round = {
         end: _date(6 * UNIT),
         scores: [Show.THREE, Show.KING, Show.ACE]
     }, {
+        id: 3,
         name: 'C',
         start: _date(7 * UNIT),
                     avatar: '/img/magician-avatar.jpeg',
@@ -35,6 +38,7 @@ var round = {
         end: _date(9 * UNIT),
         scores: [Show.FIVE, Show.SEVEN, Show.THREE]
     }, {
+        id: 4,
         name: 'D',
         start: _date(10 * UNIT),
                     avatar: '/img/magician-avatar.jpeg',
@@ -42,6 +46,7 @@ var round = {
         end: _date(12 * UNIT),
         scores: [Show.SEVEN, Show.ACE, Show.FIVE]
     }, {
+        id: 5,
         name: 'E',
         start: _date(13 * UNIT),
                     avatar: '/img/magician-avatar.jpeg',
@@ -90,11 +95,9 @@ var showController = io.of('/show').on("connection", function(socket) {
             };
 
             if (show.showStatus === Show.SHOW_PLAYING && show.magician) {
-                data.result.magician = {
-                    name: show.magician.name,
-                    avatar: '/img/magician-avatar.jpeg',
-                    status: show.magician.status
-                };
+                data.result.magician = show.magician.values([
+                    'id', 'name', 'avatar', 'status', 'start', 'score', 'end'
+                ]);
             }
 
             console.log('status', data);
@@ -123,21 +126,35 @@ show.on('start', function() {
 
 show.on('magician-changed', function() {
     console.log('magician changed! current magician:', show.magician.name);
-    showController.emit('magician-changed', show.magician);
+    showController.emit('magician-changed', {
+        magician: show.magician.values([
+            'id', 'name', 'avatar', 'status', 'start', 'score', 'end'
+        ])
+    });
 });
 
 show.on('magician-start', function() {
     console.log('magician start!');
-    showController.emit('magician-start', show.magician);
+    showController.emit('magician-start', {
+        magician: show.magician.values([
+            'id', 'name', 'avatar', 'status', 'start', 'score', 'end'
+        ])
+    });
 });
 
 show.on('magician-score', function() {
     console.log('magician score!');
-    showController.emit('magician-score', show.magician);
+    showController.emit('magician-score', {
+        magician: show.magician.values(['id', 'name', 'avatar', 'start', 'score', 'end'])
+    });
 });
 
 show.on('magician-finish', function() {
-    console.log('magician finsh!');
+    var magician = show.magician.map(['id', 'name', 'avatar', 'start', 'score', 'end']);
+    magician.scores = show.magician.scores.slice(0, 2);
+    showController.emit('magician-finish', {
+        magician: magician
+    });
 });
 
 show.on('score', function() {

@@ -22,7 +22,7 @@ gulp.task('develop', function() {
     nodemon({
         script: 'app.js',
         ext: 'html js',
-        ignore: ['ignored.js']
+        ignore: ['public/**/*']
     }).on('restart', function() {
         console.log('restarted!')
     })
