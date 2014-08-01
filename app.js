@@ -6,7 +6,7 @@ var Show = require("./lib/show");
 
 var CURRENT_ROUND = 0;
 var _date = function(minutes) {
-    return datetime(2014, 8, 3, 13, 31 + minutes);
+    return datetime(2014, 7, 1, 13, 31 + minutes);
 }
 
 var UNIT = 30;
@@ -71,12 +71,24 @@ app.use("/", express.static(__dirname + "/public"));
 app.get("/", function(req, res) {
     if(show.showStatus == Show.SHOW_WAITING) {
         return res.redirect("/wait.html");
+    } else if (show.showStatus == Show.SHOW_FINISHED) {
+        return res.redirect("/score.html");
     }
 });
 
 app.get("/wait", function(req, res) {
     if (show.showStatus == Show.SHOW_WAITING) {
         return res.redirect("/wait.html");
+    }
+});
+
+app.get("/score", function(req, res) {
+    if (show.showStatus == Show.SHOW_FINISHED) {
+        return res.redirect("/score.html");
+    } else if (show.showStatus == Show.SHOW_WAITING) {
+        return res.redirect("/wait.html");
+    } else {
+        return res.redirect("/index.html");
     }
 });
 
