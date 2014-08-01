@@ -3,7 +3,7 @@ define(function(require) {
     var io = require("socket-io");
 
     var host = window.location.hostname;
-    var socket = io.connect('http://' + host + '/show');
+    // var socket = io.connect('http://' + host + '/show');
     
     var SHOW_WAITING = 'waiting';
     
@@ -48,7 +48,7 @@ define(function(require) {
                             delta -= delta_day * day;
                             var delta_hour = Math.floor(delta/hour);
                             delta -= delta_hour * hour;
-                            var delta_min = Math.floor(delta/min);
+                            var delta_min = Math.ceil(delta/min);
 
                             document.getElementById('time').innerHTML = delta_day+'天'+delta_hour+'时'+delta_min+'分';
                         } else {
