@@ -2,7 +2,7 @@ define(function(require) {
     require("zepto");
     var io = require("socket-io");
 
-    var host = 'localhost:4000';
+    var host = window.location.hostname;
     var socket = io.connect('http://' + host + '/show');
 
     var SHOW_WAITING = 'waiting';

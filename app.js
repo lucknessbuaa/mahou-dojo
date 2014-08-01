@@ -68,6 +68,17 @@ var io = require('socket.io')(server);
 app.use(morgan('dev'));
 app.use("/", express.static(__dirname + "/public"));
 
+app.get("/wait", function(req, res) {
+    res.redirect("/wait.html");
+    // if(show.showStatus === Show.SHOW_WAITING) {
+    //     return res.redirect("/wait.html");
+    // } else if(show.showStatus === Show.SHOW_FINISHED) {
+    //     // TODO
+    // } else {
+    //     return res.redirect("/");
+    // }
+});
+
 port = argv.port || PORT;
 server.listen(port, function() {
     console.log("listening on port", port);
