@@ -42,6 +42,7 @@ body {
 	display: block;
 }
 .rules {
+	line-height: 1.3em;
 	font-family: "Microsoft YaHei";
 	color: rgb( 255, 255, 255 );
 	text-align: left;
@@ -51,6 +52,7 @@ body {
 }
 .rule_header {
 	padding-top: 10px;
+	padding-bottom: 10px;
 	font-size: 16px;
 }
 .rule {
@@ -70,7 +72,7 @@ body {
 		margin-right: auto;
 	}
 }
-@font-face {
-    font-family: FZZongYi-M05S;
-    src: url('FZZongYi.ttf')  format('truetype');
-}
+// @font-face {
+//     font-family: FZZongYi-M05S;
+//     src: url('FZZongYi.ttf')  format('truetype');
+// }

@@ -3,7 +3,50 @@ var events = require("events");
 var _ = require("underscore");
 var datetime = require("./lib/datetime");
 var Show = require("./lib/show");
-var round = require("./lib/fake");
+
+var CURRENT_ROUND = 0;
+var _date = function(minutes) {
+    return datetime(2014, 9, 1, 13, 31 + minutes);
+}
+
+var UNIT = 30;
+
+var round = {
+    start: _date(0),
+    magicians: [{
+        name: 'A',
+        start: _date(1 * UNIT),
+        score: _date(2 * UNIT),
+        end: _date(3 * UNIT),
+        scores: [Show.ACE, Show.THREE, Show.KING]
+    }, {
+        name: 'B',
+        start: _date(4 * UNIT),
+        score: _date(5 * UNIT),
+        end: _date(6 * UNIT),
+        scores: [Show.THREE, Show.KING, Show.ACE]
+    }, {
+        name: 'C',
+        start: _date(7 * UNIT),
+        score: _date(8 * UNIT),
+        end: _date(9 * UNIT),
+        scores: [Show.FIVE, Show.SEVEN, Show.THREE]
+    }, {
+        name: 'D',
+        start: _date(10 * UNIT),
+        score: _date(11 * UNIT),
+        end: _date(12 * UNIT),
+        scores: [Show.SEVEN, Show.ACE, Show.FIVE]
+    }, {
+        name: 'E',
+        start: _date(13 * UNIT),
+        score: _date(14 * UNIT),
+        end: _date(15 * UNIT),
+        scores: [Show.NINE, Show.JACK, Show.SEVEN]
+    }],
+    score: _date(16 * UNIT),
+    end: _date(17 * UNIT),
+};
 
 var PORT = 4000;
 var argv = require("minimist")(process.argv.slice(2), {
@@ -15,7 +58,6 @@ var argv = require("minimist")(process.argv.slice(2), {
         port: PORT
     }
 });
-
 var express = require("express");
 var morgan = require("morgan");
 
@@ -26,11 +68,27 @@ var io = require('socket.io')(server);
 app.use(morgan('dev'));
 app.use("/", express.static(__dirname + "/public"));
 
+app.get("/", function(req, res) {
+    if(show.showStatus == Show.SHOW_WAITING) {
+        return res.redirect("/wait.html");
+    } else if (show.showStatus == Show.SHOW_FINISHED) {
+        return res.redirect("/score.html");
+    }
+});
+
 app.get("/wait", function(req, res) {
     if (show.showStatus == Show.SHOW_WAITING) {
         return res.redirect("/wait.html");
+    }
+});
+
+app.get("/score", function(req, res) {
+    if (show.showStatus == Show.SHOW_FINISHED) {
+        return res.redirect("/score.html");
+    } else if (show.showStatus == Show.SHOW_WAITING) {
+        return res.redirect("/wait.html");
     } else {
-        return res.redirect("/");
+        return res.redirect("/index.html");
     }
 });
 
