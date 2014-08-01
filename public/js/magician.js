@@ -190,12 +190,12 @@ define(function(require) {
         $show.show();
     }
 
-    function onScore() {
-
+    function onScore(show) {
+        timer.timing('final', show.end);
     }
 
     function onFinish() {
-
+        window.location = '/score';
     }
 
     $(function() {
@@ -237,7 +237,7 @@ define(function(require) {
                         onPlay(show);
                         break;
                     case SHOW_SCORE:
-                        onScore();
+                        onScore(show);
                         break;
                     case SHOW_FINISHED:
                     default:
@@ -246,8 +246,9 @@ define(function(require) {
                 }
             });
 
-            socket.on('score', function() {
+            socket.on('score', function(show) {
                 console.log('score');
+                onScore(show);
             });
 
             socket.on('magician-changed', function(magician) {
@@ -280,8 +281,7 @@ define(function(require) {
 
             socket.on('finish', function(data) {
                 console.log('The show is finished');
-                // TODO
-                // window.location = '/score';
+                onFinish();
             });
         });
 
