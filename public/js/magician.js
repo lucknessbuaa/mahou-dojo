@@ -25,7 +25,7 @@ define(function(require) {
             var accuracy = this.selection.get('accuracy');
             var percent = (40 + accuracy * 10) + '%';
             this.$el.find('.frontend').css('height', percent);
-            this.$accuracy.html(accuracy / 6 * 100 + '%');
+            this.$accuracy.html((accuracy / 6 * 100).toFixed(0) + '%');
         }, this));
 
         showModel.on('magician-swtiched', _.bind(function() {

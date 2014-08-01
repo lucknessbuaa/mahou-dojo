@@ -46,7 +46,8 @@ define(function(require) {
 
             switch (this.magician.get('status')) {
                 case constant.MAGICIAN_WAITING:
-                    this.timing('wait-magician', this.magician.get('start'));
+                    var firstMagician = this.magician.get('first');
+                    this.timing(firstMagician ? 'wait' : 'wait-magician', this.magician.get('start'));
                     break;
                 case constant.MAGICIAN_PLAYING:
                     this.timing('playing', this.magician.get('score'));
