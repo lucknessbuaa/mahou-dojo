@@ -6,7 +6,7 @@ var Show = require("./lib/show");
 
 var CURRENT_ROUND = 0;
 var _date = function(minutes) {
-    return datetime(2014, 7, 31, 20, 31 + minutes);
+    return datetime(2014, 8, 1, 8, 31 + minutes);
 }
 
 var UNIT = 30;
