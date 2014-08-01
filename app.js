@@ -112,6 +112,9 @@ var showController = io.of('/show').on("connection", function(socket) {
                 data.result.magician = show.magician.values();
             }
 
+            if (show.showStatus === Show.SHOW_FINISHED) {
+                data.result.scores = round.magicians;
+            }
             console.log('status', data);
             socket.emit('query', data);
         }

@@ -38,7 +38,11 @@ body {
 	width: 70px;
 	height: 30px;
 }
-.score-item:first-child {
+.score-me {
+	display: table-cell;
+	text-align: center;
+	width: 70px;
+	height: 30px;
 	font-weight: bold;
 	color: red;
     -webkit-text-fill-color: red;
@@ -47,4 +51,7 @@ body {
 .bingo {
 	background: url(../img/bingo.png) center center no-repeat;
 	background-size: contain;
+}
+.hide {
+	display: none;
 }
