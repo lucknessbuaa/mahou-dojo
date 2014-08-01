@@ -23,6 +23,7 @@
     background: url(../img/bg.png) left top no-repeat;
     background-size: cover;
     padding-top: 60px;
+    overflow: hidden;
 
     @media (min-width: 360px) {
         padding-top: 100px;
@@ -55,6 +56,11 @@
 
         &.wait .timer-tip {
             background: url(../img/timer-tip-wait.png) center bottom no-repeat;
+            background-size: 80%;
+        }
+
+        &.wait-magician .timer-tip {
+            background: url(../img/timer-tip-wait-magician.png) center bottom no-repeat;
             background-size: 80%;
         }
             
@@ -171,43 +177,55 @@
     $scores: ace three five seven nine jack king;
     @mixin card($width, $score) {
         $card-width: $width;
-        padding: 0px 5px;
+        border-radius: 6px;
         box-sizing: border-box;
         width: $width;
-        height: $width + 18px;
+        height: $width * 1.42;
         background: url(../img/#{$score}.png) center center no-repeat;
-        background-size: $card-width - 10 ($card-width - 10) * 1.4;
+        background-size: 100%;
 
         &.close {
             background: url(../img/mask.png) center center no-repeat;
-            background-size: $card-width - 10 ($card-width - 10) * 1.4;
+            background-size: 100% 100%;
         }
     }
     
 
-    .cards {
-        $cards-width: 280px;
-        overflow: hidden;
-        width: $cards-width;
-        @include center-block();
-        margin-bottom: 20px;
+    .cards-wrapper {
+        background: #18191a;
+        padding-bottom: 20px;
 
+        .cards {
+            $cards-width: 280px;
+            width: $cards-width;
+            @include center-block();
+            position: relative;
 
-        .card {
-            float: left;
-            $scores: ace three five seven nine jack king;
-                @each $score in $scores {
-                    &.#{$score} {
-                    @include card($cards-width/4, $score);
+            .card {
+                $card-gutter: 10px;
+                $card-width: $cards-width/4 - $card-gutter;
+                float: left;
+                -webkit-filter: brightness(.5);
+                margin: 0px $card-gutter/2;
+                $scores: ace three five seven nine jack king;
+                    @each $score in $scores {
+                        &.#{$score} {
+                        @include card($card-width, $score);
+                    }
                 }
-            }
 
-            &.ace, &.three, &.five {
-                margin-bottom: 10px;
-            }
+                &.ace, &.three, &.five {
+                    margin-bottom: 10px;
+                }
 
-            &.ace {
-                margin-left: $cards-width / 8;
+                &.ace {
+                    margin-left: $cards-width / 8 + $card-gutter/2;
+                }
+
+                &.selected {
+                    -webkit-filter: brightness(1.1);
+                    box-shadow: 0px 0px 20px rgba(103, 175, 255, 0.75);
+                }
             }
         }
     }
