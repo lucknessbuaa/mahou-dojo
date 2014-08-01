@@ -28,30 +28,30 @@
 	</div>
 	<script src="modernizr-1.6.min.js"></script>
 	<script type="text/javascript">
-		var deadline = new Date();
-		deadline.setTime(Date.parse("Aug 3, 2014"));
-		var min = 60*1000;
-		var hour = 60*min;
-		var day = 24*hour;
-		function update () {
-			var now = new Date();
-			var delta = deadline - now;
-			if (delta >= 0) {
-				var delta_day = Math.floor(delta/day);
-				delta -= delta_day * day;
-				var delta_hour = Math.floor(delta/hour);
-				delta -= delta_hour * hour;
-				var delta_min = Math.floor(delta/min);
+		// var deadline = new Date();
+		// deadline.setTime(Date.parse("Aug 3, 2014"));
+		// var min = 60*1000;
+		// var hour = 60*min;
+		// var day = 24*hour;
+		// function update () {
+		// 	var now = new Date();
+		// 	var delta = deadline - now;
+		// 	if (delta >= 0) {
+		// 		var delta_day = Math.floor(delta/day);
+		// 		delta -= delta_day * day;
+		// 		var delta_hour = Math.floor(delta/hour);
+		// 		delta -= delta_hour * hour;
+		// 		var delta_min = Math.floor(delta/min);
 
-				document.getElementById('time').innerHTML = delta_day+'天'+delta_hour+'时'+delta_min+'分';
-			} else {
-				document.getElementById('time').innerHTML = '0天0时0分';
-				clearInterval(timer);
-				window.location = '/';
-			}
-		}
-		update();
-		var timer = setInterval(function(){update()}, 60000);
+		// 		document.getElementById('time').innerHTML = delta_day+'天'+delta_hour+'时'+delta_min+'分';
+		// 	} else {
+		// 		document.getElementById('time').innerHTML = '0天0时0分';
+		// 		clearInterval(timer);
+		// 		window.location = '/';
+		// 	}
+		// }
+		// update();
+		// var timer = setInterval(function(){update()}, 60000);
 
 		// var NastyBrowserSniffing = {
 		// 	ua: navigator.userAgent.toLowerCase(),
