@@ -26,7 +26,7 @@ app.use(morgan('dev'));
 app.use("/", express.static(__dirname + "/public"));
 
 app.get("/", function(req, res) {
-    if(show.showStatus == Show.SHOW_WAITING) {
+    if (show.showStatus == Show.SHOW_WAITING) {
         return res.redirect("/wait.html");
     } else if (show.showStatus == Show.SHOW_FINISHED) {
         return res.redirect("/score.html");
@@ -46,6 +46,16 @@ app.get("/score", function(req, res) {
         return res.redirect("/wait.html");
     } else {
         return res.redirect("/index.html");
+    }
+});
+
+app.get('/scores', function(req, res) {
+    if (show.showStatus == Show.SHOW_FINISHED) {
+        res.send(round);
+    } else {
+        res.send({
+            magicians: []
+        });
     }
 });
 
