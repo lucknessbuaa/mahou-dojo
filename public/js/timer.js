@@ -18,7 +18,7 @@ define(function(require) {
             seconds = 0;
             minutes = 0;
         } else {
-            seconds = Math.floor(this.time - now.getTime() / 1000);
+            seconds = Math.floor((this.time - now.getTime()) / 1000);
             minutes = Math.floor(seconds / 60) % 60;
             seconds = seconds % 60;
         }
@@ -31,6 +31,7 @@ define(function(require) {
     }
 
     Timer.prototype.timing = function(type, time) {
+        console.log('type:', type, 'time:', time);
         this.el.className = 'timer ' + type;
         this.type = type;
         this.time = time;

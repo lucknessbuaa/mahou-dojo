@@ -65,7 +65,11 @@
         }
             
         &.playing .timer-tip {
-            background: url(../img/timer-tip-playing.png) center bottom no-repeat;
+            background: url(../img/timer-tip-score.png) center bottom no-repeat;
+            background-size: 80%;
+        }
+
+        &.score .timer-tip {
             background-size: 80%;
         }
 
@@ -175,25 +179,43 @@
     }
 
     $scores: ace three five seven nine jack king;
-    @mixin card($width, $score) {
+    @mixin card($width) {
         $card-width: $width;
         border-radius: 6px;
         box-sizing: border-box;
         width: $width;
         height: $width * 1.42;
-        background: url(../img/#{$score}.png) center center no-repeat;
-        background-size: 100%;
+
+        @each $score in $scores {
+            &.#{$score} {
+                background: url(../img/#{$score}.png) center center no-repeat;
+                background-size: 100%;
+            }
+        }
 
         &.close {
             background: url(../img/mask.png) center center no-repeat;
             background-size: 100% 100%;
         }
+
+        &.highlighted {
+            -webkit-filter: brightness(1.1);
+            box-shadow: 0px 0px 20px rgba(103, 175, 255, 0.75);
+        }
+
+        &.selected .state {
+            background: url(../img/card-selected.png) center center no-repeat;
+            background-size: 45px 35px;
+            margin-top: 15px;
+            @include size(54px, 42px);
+            @include center-block();
+        }
     }
-    
 
     .cards-wrapper {
         background: #18191a;
         padding-bottom: 20px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, .2);
 
         .cards {
             $cards-width: 280px;
@@ -207,13 +229,9 @@
                 float: left;
                 -webkit-filter: brightness(.5);
                 margin: 0px $card-gutter/2;
-                $scores: ace three five seven nine jack king;
-                    @each $score in $scores {
-                        &.#{$score} {
-                        @include card($card-width, $score);
-                    }
-                }
 
+                @include card($card-width);
+                
                 &.ace, &.three, &.five {
                     margin-bottom: 10px;
                 }
@@ -221,15 +239,9 @@
                 &.ace {
                     margin-left: $cards-width / 8 + $card-gutter/2;
                 }
-
-                &.selected {
-                    -webkit-filter: brightness(1.1);
-                    box-shadow: 0px 0px 20px rgba(103, 175, 255, 0.75);
-                }
             }
         }
     }
-
 
     .judge-list {
         $judge-width: 100px;
@@ -264,10 +276,17 @@
             .card {
                 margin: 0 auto;
                 float: none;
-                @each $score in $scores {
-                    &.#{$score} {
-                        @include card($card-width, $score);
-                    }
+                position: relative;
+                @include card($card-width);
+                
+                &.bingo .state {
+                    background: url(../img/card-bingo.png) center center no-repeat;
+                    background-size: 45px 23px;
+                    top: 30%;
+                    left: 50%;
+                    margin-left: -22.5px;
+                    position: absolute;
+                    @include size(45px, 23px);
                 }
             }
         }

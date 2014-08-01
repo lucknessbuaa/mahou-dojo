@@ -1,12 +1,42 @@
 define(function(require) {
     require("jquery");
     require("velocity");
+    var Backbone = require("backbone");
+
     var Timer = require("js/timer");
     var token = require("js/token");
     var io = require("socket-io");
 
     var host = window.location.hostname;
     var socket = io.connect('http://' + host + '/show');
+
+    function MagicianView(el, cardSelection) {
+        this.selection = selection;
+        this._accuracy = 0;
+        this.el = el;
+        this.$el = $(el);
+        this.$avatar = this.$el.find('.magician-avatar');
+        this.$name = this.$el.find('.magician-name');
+
+        this.selection.on('change', _.bind(function() {
+            if (this._accuracy === this.selection.accuracy) {
+                return;
+            }
+
+            var percent = (30 + this._accuracy * 14) + '%';
+            this.$el.find('.frontend').css('height', percent);
+        }, this));
+    }
+
+    MagicianView.prototype.setMagician = function(magician) {
+        if (magician) {
+            this.$avatar.hide().attr('src', magician.avatar).velocity('fadeIn');
+            this.$name.html(magician.name);
+        } else {
+            this.$avatar.hide();
+            this.$name.empty();
+        }
+    };
 
     function score(magicianId, score) {
         function sendScore(magicianId, score) {
@@ -23,13 +53,103 @@ define(function(require) {
         sendScore(magicianId, score);
     }
 
-    function CardSelector(el) {
+    var JudgeView = function(el, cardSelection) {
+        this.selection = cardSelection;
         this.el = el;
         this.$el = $(el);
     }
 
-    CardSelector.prototype.select = function(score) {
-        
+    JudgeView.prototype.showScore = function(scores) {
+        for (var i = 0; i < 2; i++) {
+            var $judge = this.$el.find('.judge:eq(' + i + ')');
+            var score = scores[i];
+            var className = "card " + score + " highlighted";
+            var selectedScore = this.selection.get(String(this.magician.id));
+            if (selectedScore === score) {
+                className += " bingo";
+            }
+            $judge.find('.card')[i].className = className;
+        }
+    }
+
+    JudgeView.prototype.setMagician = function(magician) {
+        setTimeout(_.bind(function() {
+            this.$el.find(".card").attr('class', 'card close');
+        }, this), 2000);
+        this.magician = magician;
+    }
+
+    var CardSelection = Backbone.Model.extend({
+        score: function(magicianid, score) {
+            this.set(magicianId, score);
+        },
+
+        isScoreSelected: function(score) {
+            _.find(this.keys(), _.bind(function(key) {
+                return this.get(key) === score;
+            }, this));
+        }
+    });
+
+    function CardSelector(el, cardSelection) {
+        this.cardSelection = cardSelection;
+        this.el = el;
+        this.$el = $(el);
+
+        var self = this;
+
+        this.$el.find('div.card').click(function() {
+            var $this = $(this);
+            if ($this.hasClass('close')) {
+                return;
+            }
+
+            var enable = self.magician &&
+                self.magician.status === MAGICIAN_PLAYING &&
+                !self.cardSelection.has(String(this.magician.id));
+
+            if (!enable) {
+                return;
+            }
+
+            var score = $this.data('score');
+            if (!$this.hasClass('highlighted')) {
+                self.$el.find('.highlighted').removeClass('highlighted');
+                $this.addClass('highlighted');
+            } else {
+                this.cardSelection.set(String(this.magician.id), score);
+            }
+        });
+
+        this.cardSelection.on('change', _.bind(function() {
+            if (!this.magician) {
+                return;
+            }
+
+            var score = this.cardSelection.get(String(this.magician.id));
+            this.$el.find('.' + score)
+                .addClass('highlighted')
+                .addClass('selected');
+        }, this));
+
+        _.extend(this, Backbone.Events);
+    }
+
+    CardSelector.prototype.setMagician = function(magician) {
+        if (this.magician) {
+            var _magician = this.magician;
+            setTimeout(_.bind(function() {
+                var score = this.cardSelection.get(String(_magician.id))
+                if (score) {
+                    this.$el.find('.' + score)
+                        .removeClass('highlighted')
+                        .removeClass('selected')
+                        .addClass('close');
+                }
+            }, this), 2000);
+        }
+
+        this.magician = magician;
     }
 
     var SHOW_WAITING = 'waiting';
@@ -46,28 +166,29 @@ define(function(require) {
     var magician;
     var showStatus;
 
-    function onWait() {
-        window.location = '/wait';
-    }
+    var cardSelection = new CardSelection();
+    cardSelection.on('change', function() {
+        // TODO sync selection 
+    });
+    var cardSelector;
+    var judgeView;
+    var magicianView;
+
 
     function onPlay(show) {
         showStatus = show.status;
         magician = show.magician;
 
+        cardSelector.setMagician(magician);
+        judgeView.setMagician(magician);
+        magicianView.setMagician(magician);
         if (magician.status === MAGICIAN_WAITING) {
             timer.timing('wait-magician', magician.start);
-            $show.find('.magician-avatar').hide();
-            $show.find('.magician-name').empty();
         } else if (magician.status === MAGICIAN_PLAYING) {
             timer.timing('playing', magician.score);
-            $show.find('.magician-avatar').hide()
-                .attr('src', magician.avatar).velocity('fadeIn');
-            $show.find('.magician-name').html(magician.name);
         } else if (magician.status === MAGICIAN_SCORE) {
             timer.timing('score', magician.end);
         } else {
-            $show.find('.magician-avatar').hide();
-            $show.find('.magician-name').empty();
             // TODO magnipulate cards
         }
 
@@ -85,6 +206,8 @@ define(function(require) {
     $(function() {
         timer = new Timer($(".timer")[0]);
         $show = $("#show");
+        cardSelector = new CardSelector($(".cards-wrapper")[0], cardSelection);
+        judgeView = new JudgeView($(".judge-list")[0], cardSelection);
 
         socket.on('connect', function() {
             var cb_map = {};
@@ -112,7 +235,7 @@ define(function(require) {
             queryStatus(function(show) {
                 switch (show.status) {
                     case SHOW_WAITING:
-                        onWait();
+                        // TODO possible?
                         break;
                     case SHOW_PLAYING:
                         onPlay(show);
@@ -127,10 +250,6 @@ define(function(require) {
                 }
             });
 
-            socket.on('start', function() {
-                console.log('start');
-            });
-
             socket.on('score', function() {
                 console.log('score');
             });
@@ -138,16 +257,28 @@ define(function(require) {
             socket.on('magician-changed', function(magician) {
                 console.log('magician changed');
                 console.log(magician);
+                cardSelection.setMagician(magician);
+                judgeView.setMagician(magician);
+                timer.timing('wait-magician', magician.start);
             });
 
             socket.on('magician-start', function(magician) {
                 console.log('magician start');
                 console.log(magician);
+                _.extend(cardSelector.magician, magician);
+                timer.timing('playing', magician.score);
             });
 
             socket.on('magician-score', function(magician) {
                 console.log('magician score');
+                _.extend(cardSelector.magician, magician);
+                timer.timing('score', magician.end);
+            });
+
+            socket.on('magician-finish', function(magician) {
+                console.log('magician finish');
                 console.log(magician);
+                judgeView.showScore(magician.scores);
             });
 
             socket.on('finish', function(data) {
