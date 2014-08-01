@@ -69,7 +69,8 @@ app.use(morgan('dev'));
 app.use("/", express.static(__dirname + "/public"));
 
 app.get("/wait", function(req, res) {
-    res.redirect("/wait.html");
+    res.sendfile(__dirname + '/public/wait.html');
+    // res.redirect("/wait.html");
     // if(show.showStatus === Show.SHOW_WAITING) {
     //     return res.redirect("/wait.html");
     // } else if(show.showStatus === Show.SHOW_FINISHED) {
@@ -102,6 +103,23 @@ var showController = io.of('/show').on("connection", function(socket) {
                     status: show.magician.status
                 };
             }
+
+            console.log('status', data);
+            socket.emit('query', data);
+        }
+    });
+});
+
+io.of('/wait').on("connection", function(socket) {
+    socket.on('query', function(params) {
+        console.log('query', params);
+        if (params.data === 'status') {
+            var data = {
+                id: params.id,
+                result: {
+                    status: show.showStatus
+                }
+            };
 
             console.log('status', data);
             socket.emit('query', data);
