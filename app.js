@@ -75,7 +75,7 @@ app.get("/", function(req, res) {
 });
 
 app.get("/wait", function(req, res) {
-    if(show.showStatus == Show.SHOW_WAITING) {
+    if (show.showStatus == Show.SHOW_WAITING) {
         return res.redirect("/wait.html");
     }
 });
@@ -92,17 +92,12 @@ var showController = io.of('/show').on("connection", function(socket) {
             var data = {
                 id: params.id,
                 result: {
-                    status: show.showStatus,
-                    time: _date(0)
+                    status: show.showStatus
                 }
             };
 
             if (show.showStatus === Show.SHOW_PLAYING && show.magician) {
-                data.result.magician = {
-                    name: show.magician.name,
-                    avatar: '/img/magician-avatar.jpeg',
-                    status: show.magician.status
-                };
+                data.result.magician = show.magician.values();
             }
 
             console.log('status', data);
@@ -116,11 +111,12 @@ var _loop = show.loop;
 show.loop = function() {
     _loop.call(this);
 
-    // console.log('loop', 'time:', new Date());
-    // console.log('status:', this.showStatus);
-    // console.log('current magician:', this.magician ? this.magician.name : 'no magician');
-    //console.log('current magician:', this.magician);
-    //console.log('magicians:', this.magicians);
+    console.log('loop', 'time:', new Date(), 'status:', this.showStatus);
+    if (this.magician) {
+        console.log('current magician:', this.magician.name, this.magician.status);
+    } else {
+        console.log('current magician:',  'no magician');
+    }
 }
 show.launch();
 
@@ -131,21 +127,22 @@ show.on('start', function() {
 
 show.on('magician-changed', function() {
     console.log('magician changed! current magician:', show.magician.name);
-    showController.emit('magician-changed', show.magician);
+    showController.emit('magician-changed', show.magician.values());
 });
 
 show.on('magician-start', function() {
     console.log('magician start!');
-    showController.emit('magician-start', show.magician);
+    showController.emit('magician-start', show.magician.values());
 });
 
 show.on('magician-score', function() {
     console.log('magician score!');
-    showController.emit('magician-score', show.magician);
+    showController.emit('magician-score', show.magician.values());
 });
 
 show.on('magician-finish', function() {
     console.log('magician finsh!');
+    showController.emit('magician-finish', show.magician.values());
 });
 
 show.on('score', function() {

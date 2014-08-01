@@ -1,4 +1,6 @@
 define(function(require) {
+    var constant = require("js/constant");
+
     function Timer(el) {
         this.el = el;
         this.$el = $(el);
@@ -35,6 +37,20 @@ define(function(require) {
         this.el.className = 'timer ' + type;
         this.type = type;
         this.time = time;
+    };
+
+    Timer.prototype.setMagician = function(magician) {
+        switch (magician.status) {
+            case constant.MAGICIAN_WAITING:
+                this.timing('wait-magician', magician.start);
+                break;
+            case constant.MAGICIAN_PLAYING:
+                this.timing('playing', magician.score);
+                break;
+            case constant.MAGICIAN_SCORE:
+                this.timing('score', magician.end);
+                break;
+        }
     };
 
     return Timer;
