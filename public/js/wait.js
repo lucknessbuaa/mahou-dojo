@@ -58,7 +58,7 @@ define(function(require) {
                         }
                     }
                     update();
-                    var timer = setInterval(function(){update()}, 60000);
+                    var timer = setInterval(function(){update();}, 60000);
 
                 }
             });

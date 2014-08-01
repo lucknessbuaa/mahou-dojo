@@ -6,7 +6,7 @@ var Show = require("./lib/show");
 
 var CURRENT_ROUND = 0;
 var _date = function(minutes) {
-    return datetime(2014, 7, 1, 13, 31 + minutes);
+    return datetime(2014, 9, 1, 13, 31 + minutes);
 }
 
 var UNIT = 30;
@@ -104,7 +104,8 @@ var showController = io.of('/show').on("connection", function(socket) {
             var data = {
                 id: params.id,
                 result: {
-                    status: show.showStatus
+                    status: show.showStatus,
+                    time: _date(0)
                 }
             };
 
