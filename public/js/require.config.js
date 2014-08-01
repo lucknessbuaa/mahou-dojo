@@ -7,7 +7,8 @@ var require = {
         'socket-io': 'components/socket.io-client/socket.io',
         'underscore': 'components/underscore/underscore',
         'uuid': 'components/node-uuid/uuid',
-        'moment': 'components/moment/min/moment.min'
+        'moment': 'components/moment/min/moment.min',
+        'zepto': 'components/zepto/zepto'
     },
     shim: {
         'velocity': {

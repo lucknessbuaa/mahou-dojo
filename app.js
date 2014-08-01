@@ -26,6 +26,14 @@ var io = require('socket.io')(server);
 app.use(morgan('dev'));
 app.use("/", express.static(__dirname + "/public"));
 
+app.get("/wait", function(req, res) {
+    if(show.showStatus == Show.SHOW_WAITING) {
+        return res.redirect("/wait.html");
+    } else {
+        return res.redirect("/");
+    }
+});
+
 port = argv.port || PORT;
 server.listen(port, function() {
     console.log("listening on port", port);
@@ -38,14 +46,17 @@ var showController = io.of('/show').on("connection", function(socket) {
             var data = {
                 id: params.id,
                 result: {
-                    status: show.showStatus
+                    status: show.showStatus,
+                    time: _date(0)
                 }
             };
 
             if (show.showStatus === Show.SHOW_PLAYING && show.magician) {
-                data.result.magician = show.magician.values([
-                    'id', 'name', 'avatar', 'status', 'start', 'score', 'end'
-                ]);
+                data.result.magician = {
+                    name: show.magician.name,
+                    avatar: '/img/magician-avatar.jpeg',
+                    status: show.magician.status
+                };
             }
 
             console.log('status', data);
@@ -74,35 +85,21 @@ show.on('start', function() {
 
 show.on('magician-changed', function() {
     console.log('magician changed! current magician:', show.magician.name);
-    showController.emit('magician-changed', {
-        magician: show.magician.values([
-            'id', 'name', 'avatar', 'status', 'start', 'score', 'end'
-        ])
-    });
+    showController.emit('magician-changed', show.magician);
 });
 
 show.on('magician-start', function() {
     console.log('magician start!');
-    showController.emit('magician-start', {
-        magician: show.magician.values([
-            'id', 'name', 'avatar', 'status', 'start', 'score', 'end'
-        ])
-    });
+    showController.emit('magician-start', show.magician);
 });
 
 show.on('magician-score', function() {
     console.log('magician score!');
-    showController.emit('magician-score', {
-        magician: show.magician.values(['id', 'name', 'avatar', 'start', 'score', 'end'])
-    });
+    showController.emit('magician-score', show.magician);
 });
 
 show.on('magician-finish', function() {
-    var magician = show.magician.map(['id', 'name', 'avatar', 'start', 'score', 'end']);
-    magician.scores = show.magician.scores.slice(0, 2);
-    showController.emit('magician-finish', {
-        magician: magician
-    });
+    console.log('magician finsh!');
 });
 
 show.on('score', function() {
