@@ -105,7 +105,7 @@ var showController = io.of('/show').on("connection", function(socket) {
                 id: params.id,
                 result: {
                     status: show.showStatus,
-                    time: _date(0)
+                    time: round.start.getTime()
                 }
             };
 
@@ -113,9 +113,10 @@ var showController = io.of('/show').on("connection", function(socket) {
                 data.result.magician = show.magician.values();
             }
 
-            if (show.showStatus === Show.SHOW_FINISHED) {
-                data.result.scores = round.magicians;
+            if (show.showStatus === Show.SHOW_SCORE) {
+                data.end = show.end.getTime();
             }
+
             console.log('status', data);
             socket.emit('query', data);
         }
@@ -131,7 +132,7 @@ show.loop = function() {
     if (this.magician) {
         console.log('current magician:', this.magician.name, this.magician.status);
     } else {
-        console.log('current magician:',  'no magician');
+        console.log('current magician:', 'no magician');
     }
 }
 show.launch();
@@ -163,7 +164,9 @@ show.on('magician-finish', function() {
 
 show.on('score', function() {
     console.log('score');
-    showController.emit('score');
+    showController.emit('score', {
+        end: show.end.getTime()
+    });
 });
 
 show.on('finish', function() {

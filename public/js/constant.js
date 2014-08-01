@@ -28,6 +28,10 @@ define(function() {
                     return key.toLowerCase();
                 }
             }
+        },
+
+        reverseScore: function(score) {
+            return this.scores[score.toUpperCase()];
         }
     };
 });
