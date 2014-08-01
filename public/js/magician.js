@@ -87,7 +87,6 @@ define(function(require) {
 
             socket.on('start', function() {
                 console.log('start');
-                window.location = '/';
             });
 
             socket.on('score', function() {
