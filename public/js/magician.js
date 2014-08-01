@@ -64,10 +64,10 @@ define(function(require) {
         for (var i = 0; i < scores.length; i++) {
             var $judge = this.$el.find('.judge:eq(' + i + ')');
             var score = constant.score(scores[i]);
-            var className = "card " + score + " highlighted";
+            var className = "card " + score;
             var selectedScore = this.selection.get(String(this.magician.id));
             if (selectedScore === score) {
-                className += " bingo";
+                className += " bingo highlighted";
             }
             console.log('showScore, className:', className);
             $judge.find('.card')[0].className = className;
