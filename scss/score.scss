@@ -55,3 +55,23 @@ body {
 .hide {
 	display: none;
 }
+.mobile {
+	width: 70%;
+	height: 25px;
+	margin: 20px auto;
+	left: 0;
+	right: 0;
+}
+#mobile {
+	width: 70%;
+	height: 100%;
+	padding: 0;
+	border: 0;
+}
+#confirm {
+	height: 100%;
+	float: right;
+	color: #fff;
+	background-color: #600b0b;
+	border: 0;
+}

@@ -59,5 +59,12 @@ define(function(require) {
         socket.on('connect_timeout', function(err) {
             console.error('connect timeout!');
         });
+
+
+        $('#confirm').onclick = function() {
+            console.log($("#mobile").length);
+            $("#mobile").disabled = 'disabled';
+            $("#confirm").remove();
+        };
     });
 });
