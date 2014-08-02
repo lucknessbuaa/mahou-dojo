@@ -66,6 +66,10 @@ server.listen(port, function() {
 });
 
 var showController = io.of('/show').on("connection", function(socket) {
+    socket.on('score', function(data) {
+        console.log('client data updated', data);
+    });
+
     socket.on('query', function(params) {
         console.log('query', params);
         if (params.data === 'status') {
