@@ -19,8 +19,8 @@ gulp.task('sass', function() {
             errLogToConsole: true
         }))
         .pipe(base64({
-            baseDir: 'public',
-            maxImageSize: 64 * 1024 // 64k
+            baseDir: 'public/css',
+            maxImageSize: 32 * 1024 // 64k
         }))
         .pipe(minifyCSS())
         .pipe(gulp.dest("public/css/"));
