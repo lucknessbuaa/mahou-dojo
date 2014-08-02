@@ -41,7 +41,7 @@ define(function(require) {
 
     Timer.prototype.setShowModel = function(showModel) {
         this.showModel = showModel;
-        this.showModel.on('magician-swtiched', _.bind(function() {
+        this.showModel.on('magician-switched', _.bind(function() {
             this.magician = showModel.get('magician');
 
             switch (this.magician.get('status')) {

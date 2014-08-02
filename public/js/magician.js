@@ -28,7 +28,7 @@ define(function(require) {
             this.$accuracy.html((accuracy / 6 * 100).toFixed(0) + '%');
         }, this));
 
-        showModel.on('magician-swtiched', _.bind(function() {
+        showModel.on('magician-switched', _.bind(function() {
             console.log('MagicianView: magician changed');
             this.magician = showModel.get('magician');
             this.magician.on('start', _.bind(function() {
@@ -61,9 +61,9 @@ define(function(require) {
         this.$el = $(el);
         this.$cards = this.$el.find(".card");
 
-        showModel.on('magician-swtiched', _.bind(function() {
+        showModel.on('magician-switched', _.bind(function() {
+            var _magician = this.magician;
             this.magician = showModel.get('magician');
-
             this.magician.once('start', _.bind(function() {
                 if (_magician) {
                     this.$cards.attr('class', 'card close');
@@ -107,7 +107,7 @@ define(function(require) {
 
         var self = this;
 
-        showModel.on('magician-swtiched', _.bind(function() {
+        showModel.on('magician-switched', _.bind(function() {
             var _magician = this.magician;
 
             this.magician = showModel.get('magician');
@@ -180,7 +180,7 @@ define(function(require) {
     var ShowModel = Backbone.Model.extend({
         setMagician: function(magician) {
             this.set('magician', magician);
-            this.trigger('magician-swtiched');
+            this.trigger('magician-switched');
         }
     });
 
