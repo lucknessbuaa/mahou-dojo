@@ -19,8 +19,11 @@
     height: $height;
 }
 
-#show {
+.content {
     background: url(../img/bg.png) left top no-repeat;
+}
+
+#show {
     background-size: cover;
     padding-top: 60px;
     overflow: hidden;
