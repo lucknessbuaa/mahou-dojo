@@ -136,7 +136,7 @@ define(function(require) {
             }, this));
         }, this));
 
-        this.$el.find('div.card').click(function() {
+        this.$el.find('div.card').tap(function() {
             var $this = $(this);
             if ($this.hasClass('close')) {
                 return;
