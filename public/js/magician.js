@@ -62,9 +62,14 @@ define(function(require) {
         this.$cards = this.$el.find(".card");
 
         showModel.on('magician-swtiched', _.bind(function() {
-            this.$cards.attr('class', 'card close');
-
             this.magician = showModel.get('magician');
+
+            this.magician.once('start', _.bind(function() {
+                if (_magician) {
+                    this.$cards.attr('class', 'card close');
+                }
+            }, this));
+
             this.magician.once('scored', _.bind(function() {
                 var scores = this.magician.get('scores');
                 _.each(scores, _.bind(function(score, index) {
@@ -103,17 +108,21 @@ define(function(require) {
         var self = this;
 
         showModel.on('magician-swtiched', _.bind(function() {
-            if (this.magician) {
-                var score = this.cardSelection.get(String(this.magician.get('id')))
-                if (score) {
-                    this.$el.find('.' + score)
-                        .removeClass('highlighted')
-                        .removeClass('selected')
-                        .addClass('close');
-                }
-            }
+            var _magician = this.magician;
 
             this.magician = showModel.get('magician');
+            this.magician.once('start', _.bind(function() {
+                if (_magician) {
+                    var score = this.cardSelection.get(String(_magician.get('id')))
+                    if (score) {
+                        this.$el.find('.' + score)
+                            .removeClass('highlighted')
+                            .removeClass('selected')
+                            .addClass('close');
+                    }
+                }
+            }, this));
+
             this.magician.once('scored', _.bind(function() {
                 var score = this.cardSelection.get(String(this.magician.get('id')));
                 if (score && this.magician.get('scores').indexOf(constant.reverseScore(score)) !== -1) {
