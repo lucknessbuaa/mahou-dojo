@@ -32,16 +32,20 @@ define(function(require) {
             console.log('MagicianView: magician changed');
             this.magician = showModel.get('magician');
 
-            if (this.magician.get('status') !== constant.MAGICIAN_WAITING) {
-                this.showMagician();
-            }
-
             this.magician.on('start', _.bind(function() {
                 this.showMagician();
-                this.$avatar.hide()
-                    .attr('src', this.magician.get('avatar'))
-                    .velocity('fadeIn');
-                this.$name.html(this.magician.get('name'));
+            }, this));
+
+            this.magician.on('score', _.bind(function() {
+                if (this.$avatar.css('display') === 'none') {
+                    this.showMagician();
+                }
+            }, this));
+
+            this.magician.on('scored', _.bind(function() {
+                if (this.$avatar.css('display') === 'none') {
+                    this.showMagician();
+                }
             }, this));
         }, this));
     }
