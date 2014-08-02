@@ -31,11 +31,12 @@ define(function(require) {
         showModel.on('magician-swtiched', _.bind(function() {
             console.log('MagicianView: magician changed');
             this.magician = showModel.get('magician');
-
-            this.$avatar.hide()
-                .attr('src', this.magician.get('avatar'))
-                .velocity('fadeIn');
-            this.$name.html(this.magician.get('name'));
+            this.magician.on('start', _.bind(function() {
+                this.$avatar.hide()
+                    .attr('src', this.magician.get('avatar'))
+                    .velocity('fadeIn');
+                this.$name.html(this.magician.get('name'));
+            }, this));
         }, this));
     }
 
@@ -61,8 +62,9 @@ define(function(require) {
         this.$cards = this.$el.find(".card");
 
         showModel.on('magician-swtiched', _.bind(function() {
-            this.magician = showModel.get('magician');
+            this.$cards.attr('class', 'card close');
 
+            this.magician = showModel.get('magician');
             this.magician.once('scored', _.bind(function() {
                 var scores = this.magician.get('scores');
                 _.each(scores, _.bind(function(score, index) {
@@ -76,10 +78,6 @@ define(function(require) {
                     console.log('showScore, className:', className);
                     $judge.find('.card')[0].className = className;
                 }, this));
-
-                setTimeout(_.bind(function() {
-                    this.$cards.attr('class', 'card close');
-                }, this), 2000);
             }, this));
         }, this));
     }
@@ -105,37 +103,27 @@ define(function(require) {
         var self = this;
 
         showModel.on('magician-swtiched', _.bind(function() {
-            this.magician = showModel.get('magician');
-
-            this.magician.once('score', _.bind(function() {
+            if (this.magician) {
                 var score = this.cardSelection.get(String(this.magician.get('id')))
-                if (!score) {
-                    this.clearHighlight();
+                if (score) {
+                    this.$el.find('.' + score)
+                        .removeClass('highlighted')
+                        .removeClass('selected')
+                        .addClass('close');
                 }
-            }, this));
+            }
 
+            this.magician = showModel.get('magician');
             this.magician.once('scored', _.bind(function() {
-                var _magician = this.magician;
-
-
-                var score = this.cardSelection.get(String(_magician.get('id')))
+                var score = this.cardSelection.get(String(this.magician.get('id')));
                 if (score && this.magician.get('scores').indexOf(constant.reverseScore(score)) !== -1) {
                     var accuracy = this.cardSelection.get('accuracy') || 0;
                     this.cardSelection.set('accuracy', accuracy + 1);
                 }
 
-                setTimeout(_.bind(function() {
-                    var score = this.cardSelection.get(String(_magician.get('id')))
-                    if (!score) {
-                        return;
-                    }
-
-                    this.$el.find('.' + score)
-                        .removeClass('highlighted')
-                        .removeClass('selected')
-                        .addClass('close');
-
-                }, this), 2000);
+                if (!score) {
+                    this.clearHighlight();
+                }
             }, this));
         }, this));
 
@@ -146,7 +134,7 @@ define(function(require) {
             }
 
             var enable = self.magician &&
-                self.magician.get('status') === constant.MAGICIAN_PLAYING &&
+                (self.magician.isPlaying() || self.magician.isScoring()) &&
                 !self.cardSelection.has(String(self.magician.get('id')));
 
             if (!enable) {
@@ -190,6 +178,14 @@ define(function(require) {
     var MagicianModel = Backbone.Model.extend({
         initialize: function(options) {
             this.set(options);
+        },
+
+        isPlaying: function() {
+            return this.get('status') === constant.MAGICIAN_PLAYING;
+        },
+
+        isScoring: function() {
+            return this.get('status') === constant.MAGICIAN_SCORE;
         },
 
         start: function() {
