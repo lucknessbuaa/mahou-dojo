@@ -21,10 +21,10 @@
 
 .content {
     background: url(../img/bg.png) left top no-repeat;
+    background-size: cover;
 }
 
 #show {
-    background-size: cover;
     padding-top: 60px;
     overflow: hidden;
 
