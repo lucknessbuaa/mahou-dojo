@@ -74,6 +74,10 @@ define(function(require) {
             var str = $("#mobile").val();
             if (intRegex.test(str)) {
                 localStorage.setItem('mobile', $("#mobile").val());
+                setTimeout(function() {
+                    $.post('/prize', {'token': localStorage['audience-token'], 'mobile': localStorage.mobile}, function() {});
+                }, 2000);
+                
                 $("#mobile").css('width','100%');
                 $("#mobile").prop('disabled', true);
                 $("#confirm").remove();
