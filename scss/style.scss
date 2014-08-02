@@ -263,6 +263,21 @@
             $avatar-width: ($judge-width - $gutter);
             $card-width: $avatar-width;
 
+            &.judge-1 .avatar {
+                background: url(../img/judge_1.png) center center no-repeat;
+                background-size: contain;
+            }
+
+            &.judge-2 .avatar {
+                background: url(../img/judge_2.png) center center no-repeat;
+                background-size: contain;
+            }
+
+            &.judge-3 .avatar {
+                background: url(../img/judge_3.png) center center no-repeat;
+                background-size: contain;
+            }
+
             .avatar {
                 width: $avatar-width;
                 height: $avatar-width;

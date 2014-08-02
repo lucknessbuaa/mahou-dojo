@@ -14,13 +14,13 @@ var pkgs = require('./pkgs');
 var rjs = require('requirejs');
 
 gulp.task('sass', function() {
-    gulp.src("scss/*.scss")
+    return gulp.src("scss/*.scss")
         .pipe(sass({
             errLogToConsole: true
         }))
         .pipe(base64({
             baseDir: 'public/css',
-            maxImageSize: 32 * 1024 // 64k
+            maxImageSize: 32 * 1024 // 32k
         }))
         .pipe(minifyCSS())
         .pipe(gulp.dest("public/css/"));
@@ -38,7 +38,7 @@ gulp.task('develop', function() {
     }).on('restart', function() {
         console.log('restarted!')
     })
-})
+});
 
 gulp.task('image-png', function() {
     return gulp.src("img/*.png")
