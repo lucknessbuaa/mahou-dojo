@@ -1,5 +1,5 @@
-var require = {
-    baseUrl: "/",
+module.exports = {
+    baseUrl: "public",
     paths: {
         'jquery': 'components/jquery/dist/jquery.min',
         'velocity': 'components/velocity/jquery.velocity.min',

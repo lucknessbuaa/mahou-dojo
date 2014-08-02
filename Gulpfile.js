@@ -1,3 +1,4 @@
+var _ = require('underscore');
 var gulp = require("gulp");
 var sass = require("gulp-sass");
 var minifyCSS = require('gulp-minify-css');
@@ -7,6 +8,9 @@ var pngcrush = require("imagemin-pngcrush");
 var tinypng = require("gulp-tinypng");
 var nodemon = require('gulp-nodemon');
 var changed = require('gulp-changed');
+var async = require('async');
+var pkgs = require('./pkgs');
+var rjs = require('requirejs');
 
 gulp.task('sass', function() {
     gulp.src("scss/*.scss")
@@ -50,3 +54,31 @@ gulp.task('image-other', function() {
 });
 
 gulp.task('image', ['image-png', 'image-other']);
+
+gulp.task('rjs', function(callback) {
+    async.eachSeries(['js/magician'], function(pkg, cb) {
+        console.log(pkg);
+        rjs.optimize(_.extend(pkgs, {
+            name: pkg,
+            optimize: "none",
+            out: 'public/' + pkg + ".bundle.js"
+        }), function() {
+            console.log(pkg, "done!");
+            cb();
+        }, function(err) {
+            console.log(pkg, "error!");
+            console.error(err);
+            cb(err);
+        });
+    }, function(err) {
+        callback(err);
+    });
+});
+
+gulp.task('uglify', ['rjs'], function() {
+    return gulp.src('public/js/*.bundle.js')
+        .pipe(uglify({
+            preserveComments: "all"
+        }))
+        .pipe(gulp.dest('public/js'));
+});
