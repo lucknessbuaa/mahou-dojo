@@ -136,7 +136,7 @@ define(function(require) {
             }, this));
         }, this));
 
-        this.$el.find('div.card').tap(function() {
+        function onCardTap() {
             var $this = $(this);
             if ($this.hasClass('close')) {
                 return;
@@ -157,7 +157,13 @@ define(function(require) {
             } else {
                 self.cardSelection.set(String(self.magician.id), score);
             }
-        });
+        }
+
+        if (this.$cards.tap) {
+            this.$cards.tap(onCardTap);
+        } else {
+            this.$cards.click(onCardTap);
+        }
 
         this.cardSelection.on('change', _.bind(function() {
             if (!this.magician) {

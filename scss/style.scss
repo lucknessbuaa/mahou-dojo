@@ -140,27 +140,15 @@
             margin-left: -$mood-width/2 - 3px;
             background-size: 280px; 
 
-            $head-width: $width - 35px;
+            $head-width: ($mood-width + 30px)/2;
             .magician-avatar {
                 position: absolute;
                 display: block;
                 border-radius: 50%;
                 @include square($head-width);
-                margin-left: -$head-width/2;
-                left: 51.5%;
-                top: 7%;
-            }
-
-            .magician-avatar-light {
-                position: absolute;
-                display: block;
-                border-radius: 50%;
-                @include square($head-width);
-                margin-left: -$head-width/2;
-                left: 51.5%;
-                top: 7%;
-                background: url(../img/magician-head-light.png) center center no-repeat;
-                background-size: 100% 100%;
+                margin-left: -($head-width - 5px)/2;
+                left: 50%;
+                top: 4%;
             }
 
             .name-wrapper {
@@ -174,7 +162,8 @@
                 .magician-name {
                     text-align: center;
                     color: #701d1d;
-                    @include transform(skew(-30deg) rotate(-20deg));
+                    font-size: 16px;
+                    @include transform(skew(-20deg) rotate(-17deg));
                     line-height: 90px;
                 }
             }
