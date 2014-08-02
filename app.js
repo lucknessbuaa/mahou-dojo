@@ -1,6 +1,7 @@
 var util = require("util");
 var events = require("events");
 var _ = require("underscore");
+var mongodb = require("mongodb");
 var datetime = require("./lib/datetime");
 var Show = require("./lib/show");
 var round = require("./lib/fake");
