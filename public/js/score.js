@@ -16,17 +16,19 @@ define(function(require) {
         socket.on('connect', function() {
 
             queryScores(function(data) {
-                var myscores = [1, 13, 5, 7, 11];
+                var myscores = [2, 13, 5, 7, 11];
                 var me = document.getElementsByClassName('score-me');
                 var items = document.getElementsByClassName('score-item');
 
                 counter = 0;
                 magicians = data.magicians;
                 magicians.forEach(function(magician, index) {
+                    var flag = 0;
                     magician.scores.forEach(function(score) {
                         var $item = $(items[counter++]);
                         if (myscores[index] === score) {
                             $item.addClass('bingo');
+                            flag = 1;
                         }
 
                         var temp = 0;
@@ -46,6 +48,9 @@ define(function(require) {
 
                         $item.html('<span>' + temp + '</span>');
                     });
+                    if (!flag) {
+                        $(me[index]).addClass('false');
+                    }
                 });
 
                 $('#score').attr('class', 'score');
@@ -78,11 +83,12 @@ define(function(require) {
                     $.post('/prize', {'token': localStorage['audience-token'], 'mobile': localStorage.mobile}, function() {});
                 }, 2000);
                 
-                $("#mobile").css('width','100%');
+                $("#mobile").animate({'width':'100%'}, 500);
                 $("#mobile").prop('disabled', true);
                 $("#confirm").remove();
             } else {
-                $("#mobile").val('请正确输入手机号');
+                $("#mobile").val('');
+                $("#mobile").attr("placeholder", "请正确输入手机号");
             }
         });
     });

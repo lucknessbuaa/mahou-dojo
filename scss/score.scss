@@ -8,8 +8,8 @@ body {
 	margin: 0;
 }
 .main {
-  background: url(../img/endbg.png) center center no-repeat rgb(25,25,32);
-  background-size: contain;
+  background: url(../img/endbg.png) top center no-repeat rgb(25,25,32);
+  background-size: cover;
   position: absolute;
   width: 100%;
   height: 100%;
@@ -43,7 +43,7 @@ body {
 	width: 70px;
 	height: 30px;
 }
-.score-me {
+.score-me:not(.false) {
 	display: table-cell;
 	text-align: center;
 	width: 70px;
@@ -52,6 +52,12 @@ body {
 	color: red;
     -webkit-text-fill-color: red;
     -webkit-text-stroke: 1px white;
+}
+.score-me.false {
+	display: table-cell;
+	text-align: center;
+	width: 70px;
+	height: 30px;
 }
 .bingo {
 	background: url(../img/bingo.png) center center no-repeat;

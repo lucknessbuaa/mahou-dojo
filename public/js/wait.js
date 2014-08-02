@@ -54,7 +54,7 @@ define(function(require) {
                         } else {
                             document.getElementById('time').innerHTML = '0天0时0分';
                             clearInterval(timer);
-                            window.location = '/';
+                            // window.location = '/';
                         }
                     }
                     update();
