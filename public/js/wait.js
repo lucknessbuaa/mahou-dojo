@@ -54,11 +54,11 @@ define(function(require) {
                         } else {
                             document.getElementById('time').innerHTML = '0天0时0分';
                             clearInterval(timer);
-                            window.location = '/';
+                            // window.location = '/';
                         }
                     }
                     update();
-                    var timer = setInterval(function(){update();}, 60000);
+                    var timer = setInterval(function(){update();}, 1000);
 
                 }
             });
