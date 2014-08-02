@@ -28,6 +28,7 @@
     "gulp-tinypng": "~1.0.2",
     "gulp-if": "~1.2.4",
     "gulp-changed": "~0.4.1",
-    "async": "~0.9.0"
+    "async": "~0.9.0",
+    "gulp-base64": "~0.1.1"
   }
 }
