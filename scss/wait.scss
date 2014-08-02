@@ -1,9 +1,15 @@
+@import "public/components/ratchet/sass/variables.scss";
+@import "public/components/ratchet/sass/mixins.scss";
+@import "public/components/ratchet/sass/normalize.scss";
+@import "public/components/ratchet/sass/base.scss";
+@import "public/components/ratchet/sass/type.scss";
+
 body {
 	margin: 0;
 }
 .main {
-	background: url(../img/background.png) center center no-repeat rgb(25,25,32);
-	background-size: contain;
+	background: url(../img/background.png) top center no-repeat rgb(25,25,32);
+	background-size: cover;
 	position: absolute;
 	width: 100%;
 	height: 100%;
@@ -21,7 +27,6 @@ body {
 	background-size: 100% 100%;
 }
 .timer {
-	font-family: "FZZongYi-M05S";
 	text-align: center;
     color: #ccc;
 }
@@ -43,7 +48,6 @@ body {
 }
 .rules {
 	line-height: 1.3em;
-	font-family: "Microsoft YaHei";
 	color: rgb( 255, 255, 255 );
 	text-align: left;
 	width: 85%;
@@ -70,6 +74,9 @@ body {
 		right: 0;
 		margin-left: auto;
 		margin-right: auto;
+	}
+	.rules {
+		line-height: 1em;
 	}
 }
 // @font-face {
