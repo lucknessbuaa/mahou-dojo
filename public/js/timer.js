@@ -50,6 +50,7 @@ define(function(require) {
                     this.timing(firstMagician ? 'wait' : 'wait-magician', this.magician.get('start'));
                     break;
                 case constant.MAGICIAN_PLAYING:
+                case constant.MAGICIAN_SCORE:
                     this.timing('playing', this.magician.get('end'));
                     break;
             }

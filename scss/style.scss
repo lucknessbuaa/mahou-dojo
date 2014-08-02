@@ -112,11 +112,14 @@
         }
 
         .progress-bar {
+            z-index: 2000;
             position: absolute;
             overflow: hidden;
             @include square(100%);
-            @include linear-gradient(#333, #AAA);
             border-radius: 50%;
+            -webkit-transform: translateZ(0);
+            -webkit-mask-image: -webkit-radial-gradient(circle, white 100%, black 100%);
+            @include linear-gradient(#333, #AAA);
 
             .frontend {
                 @include box-shadow(-8px 0px 35px #d50000);
@@ -130,6 +133,7 @@
         }
 
         .mood {
+            z-index: 2010;
             $mood-width: 280px;
             width: $mood-width;
             height: 200px;
@@ -147,8 +151,8 @@
                 border-radius: 50%;
                 @include square($head-width);
                 margin-left: -($head-width - 5px)/2;
-                left: 50%;
-                top: 4%;
+                left: 140px;
+                top: 7px;
             }
 
             .name-wrapper {

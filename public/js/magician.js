@@ -24,20 +24,37 @@ define(function(require) {
             console.log('accuracy changed:', this.selection.get('accuracy'));
             var accuracy = this.selection.get('accuracy');
             var percent = (40 + accuracy * 10) + '%';
-            this.$el.find('.frontend').css('height', percent);
+            this.$el.find('.frontend').hide().css('height', percent).show();
             this.$accuracy.html((accuracy / 6 * 100).toFixed(0) + '%');
         }, this));
 
         showModel.on('magician-switched', _.bind(function() {
             console.log('MagicianView: magician changed');
             this.magician = showModel.get('magician');
+
             this.magician.on('start', _.bind(function() {
-                this.$avatar.hide()
-                    .attr('src', this.magician.get('avatar'))
-                    .velocity('fadeIn');
-                this.$name.html(this.magician.get('name'));
+                this.showMagician();
+            }, this));
+
+            this.magician.on('score', _.bind(function() {
+                if (this.$avatar.css('display') === 'none') {
+                    this.showMagician();
+                }
+            }, this));
+
+            this.magician.on('scored', _.bind(function() {
+                if (this.$avatar.css('display') === 'none') {
+                    this.showMagician();
+                }
             }, this));
         }, this));
+    }
+
+    MagicianView.prototype.showMagician = function() {
+        this.$avatar.hide()
+            .attr('src', this.magician.get('avatar'))
+            .velocity('fadeIn');
+        this.$name.html(this.magician.get('name'));
     }
 
     function score(magicianId, score) {
@@ -255,7 +272,7 @@ define(function(require) {
                 case constant.MAGICIAN_PLAYING:
                     magician.start();
                     break;
-                case constant.MAGICIAN_PLAYING:
+                case constant.MAGICIAN_SCORE:
                     magician.score();
                     break;
                 case constant.MAGICIAN_FINISHED:
