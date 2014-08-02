@@ -8,6 +8,7 @@ var pngcrush = require("imagemin-pngcrush");
 var tinypng = require("gulp-tinypng");
 var nodemon = require('gulp-nodemon');
 var changed = require('gulp-changed');
+var base64 = require('gulp-base64');
 var async = require('async');
 var pkgs = require('./pkgs');
 var rjs = require('requirejs');
@@ -16,6 +17,10 @@ gulp.task('sass', function() {
     gulp.src("scss/*.scss")
         .pipe(sass({
             errLogToConsole: true
+        }))
+        .pipe(base64({
+            baseDir: 'public',
+            maxImageSize: 64 * 1024 // 64k
         }))
         .pipe(minifyCSS())
         .pipe(gulp.dest("public/css/"));
