@@ -60,11 +60,26 @@ define(function(require) {
             console.error('connect timeout!');
         });
 
-
-        $('#confirm').onclick = function() {
-            console.log($("#mobile").length);
-            $("#mobile").disabled = 'disabled';
+        if (localStorage.mobile) {
+            $("#mobile").val(localStorage.mobile);
+            $("#mobile").css('width','100%');
+            $("#mobile").prop('disabled', true);
             $("#confirm").remove();
-        };
+        }
+
+        $('.mobile').removeClass('hide');
+
+        $('#confirm').click(function() {
+            var intRegex = /^\d{11}$/;
+            var str = $("#mobile").val();
+            if (intRegex.test(str)) {
+                localStorage.setItem('mobile', $("#mobile").val());
+                $("#mobile").css('width','100%');
+                $("#mobile").prop('disabled', true);
+                $("#confirm").remove();
+            } else {
+                $("#mobile").val('请正确输入手机号');
+            }
+        });
     });
 });

@@ -1,3 +1,9 @@
+@import "public/components/ratchet/sass/variables.scss";
+@import "public/components/ratchet/sass/mixins.scss";
+@import "public/components/ratchet/sass/normalize.scss";
+@import "public/components/ratchet/sass/base.scss";
+@import "public/components/ratchet/sass/type.scss";
+
 body {
 	margin: 0;
 }
@@ -25,7 +31,6 @@ body {
 	width: 60px;
 }
 .score {
-	font-family: "Microsoft YaHei";
 	color: rgb( 255, 255, 255 );
 	font-size: 20px;
 	display: table;
@@ -63,7 +68,7 @@ body {
 	right: 0;
 }
 #mobile {
-	width: 70%;
+	width: 78%;
 	height: 100%;
 	padding: 0;
 	border: 0;
