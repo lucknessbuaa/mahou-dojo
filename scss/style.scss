@@ -184,7 +184,7 @@
     $scores: ace three five seven nine jack king;
     @mixin card($width) {
         $card-width: $width;
-        border-radius: 6px;
+        border-radius: 5px;
         box-sizing: border-box;
         width: $width;
         height: $width * 1.42;
