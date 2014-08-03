@@ -16,7 +16,8 @@
     "mongodb": "~1.4.7",
     "socket.io": "~1.0.6",
     "body-parser": "~1.5.2",
-    "chalk": "~0.5.1"
+    "chalk": "~0.5.1",
+    "bunyan": "~1.0.0"
   },
   "devDependencies": {
     "requirejs": "~2.1.14",
