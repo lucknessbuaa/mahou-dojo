@@ -9,10 +9,7 @@ define(function(require) {
     var token = require("js/token");
     var io = require("socket-io");
 
-    var magicians = [];
 
-    var host = window.location.hostname;
-    var socket = io.connect('http://' + host + '/show');
 
     function __error(fn) {
         return function() {
@@ -290,6 +287,10 @@ define(function(require) {
     var MAGICIAN_SCORE = 'score';
     var MAGICIAN_FINISHED = 'finished';
 
+    var magicians = [];
+    var host = window.location.hostname;
+    var socket;
+
     var timer, $show;
     var magician;
     var showStatus;
@@ -348,6 +349,7 @@ define(function(require) {
         magicianView = new MagicianView($(".magician")[0], cardSelection);
         var connected = false;
 
+        socket = io.connect('http://' + host + '/show');
         socket.on('connect', function() {
             if (connected) {
                 console.error('Connect event is duplicated!');
