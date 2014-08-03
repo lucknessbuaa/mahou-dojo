@@ -148,6 +148,7 @@ define(function(require) {
         this.el = el;
         this.$el = $(el);
         this.$cards = this.$el.find('.card');
+        this.$tip = this.$el.find('.tip');
 
         var self = this;
         this.ensureCards();
@@ -157,6 +158,7 @@ define(function(require) {
 
             this.magician = showModel.get('magician');
             this.magician.once('start', _.bind(function() {
+                this.$tip.html('双击扑克牌为选手打分');
                 this.ensureCards();
             }, this));
 
@@ -184,6 +186,7 @@ define(function(require) {
                 self.$el.find('.highlighted').removeClass('highlighted');
                 $this.addClass('highlighted');
             } else {
+                self.$tip.html('已确定选牌');
                 self.cardSelection.score(self.magician.id, score);
             }
         }
