@@ -88,7 +88,8 @@ define(function(require) {
         var key = 'scores-' + showId + '-' + token;
         localStorage.setItem(key, JSON.stringify(cardSelection.toJSON()));
 
-        socket.emit('score', {
+        socket.emit('add-score', {
+            id: showId,
             token: token,
             score: cardSelection.toJSON()
         });
