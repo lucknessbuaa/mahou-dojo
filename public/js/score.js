@@ -86,12 +86,10 @@ define(function(require) {
             var str = $("#mobile").val();
             if (intRegex.test(str)) {
                 localStorage.setItem('mobile', $("#mobile").val());
-                $.post('/prize', {
+                $.post('/mobile', {
                     token: token,
                     mobile: localStorage.mobile
-                }, 'json', function() {
-
-                });
+                }, 'json');
 
                 $("#mobile").animate({
                     'width': '100%'
