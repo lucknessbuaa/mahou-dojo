@@ -1,14 +1,29 @@
 var MongoClient = require("mongodb").MongoClient;
+var bunyan = require('bunyan');
 var audienceCollection, round, showCollection;
+var log = bunyan.createLogger({
+    name: 'mahou',
+    streams: [{
+        type: 'rotating-file',
+        path: 'logs/app.log'
+    }]
+});
+var loopLogger = bunyan.createLogger({
+    name: 'looper',
+    streams: [{
+        type: 'rotating-file',
+        path: 'logs/looper.log'
+    }]
+});
 
 MongoClient.connect("mongodb://localhost:27017/mahou", function(err, db) {
     if (err) {
-        return console.error(err);
+        return log.error(err);
     }
 
     db.createCollection('audience', function(err, collection) {
         if (err) {
-            return console.error(err);
+            return log.error(err);
         }
 
         audienceCollection = collection;
@@ -17,7 +32,7 @@ MongoClient.connect("mongodb://localhost:27017/mahou", function(err, db) {
 
     db.createCollection('show', function(err, collection) {
         if (err) {
-            return console.error(err);
+            return log.error(err);
         }
 
         showCollection = collection;
@@ -25,11 +40,11 @@ MongoClient.connect("mongodb://localhost:27017/mahou", function(err, db) {
             id: 0
         }, function(err, item) {
             if (err) {
-                return console.error(err);
+                return log.error(err);
             }
 
             if (!item) {
-                return console.error('round not found');
+                return log.error('round not found');
             }
 
             round = item;
@@ -139,12 +154,12 @@ function launch() {
 
     port = argv.port || PORT;
     server.listen(port, function() {
-        console.log("listening on port", port);
+        log.info("listening on port",port);
     });
 
     var showController = io.of('/show').on("connection", function(socket) {
         socket.on('add-score', function(data) {
-            console.log('client data updated', data);
+            log.info('client data updated', data);
             if (!data.token) {
                 return;
             }
@@ -160,13 +175,13 @@ function launch() {
                 upsert: true
             }, function(err) {
                 if (err) {
-                    return console.error(err);
+                    return log.error(err);
                 }
             });
         });
 
         socket.on('query', function(params) {
-            console.log('query', params);
+            log.info('query', params);
             if (params.data === 'status') {
                 var data = {
                     id: params.id,
@@ -185,7 +200,7 @@ function launch() {
                     data.end = show.end.getTime();
                 }
 
-                console.log('status', data);
+                log.info('status', data);
                 socket.emit('query', data);
             }
         });
@@ -196,49 +211,49 @@ function launch() {
     show.loop = function() {
         _loop.call(this);
 
-        console.log('loop', 'time:', new Date(), 'status:', this.showStatus);
+        loopLogger.info('loop', 'time:', new Date(), 'status:', this.showStatus);
         if (this.magician) {
-            console.log('current magician:', this.magician.name, this.magician.status);
+            loopLogger.info('current magician:', this.magician.name, this.magician.status);
         } else {
-            console.log('current magician:', 'no magician');
+            loopLogger.info('current magician:', 'no magician');
         }
     }
     show.launch();
 
     show.on('start', function() {
-        console.log('show start!');
+        log.info('show start!');
         showController.emit('start');
     });
 
     show.on('magician-changed', function() {
-        console.log('magician changed! current magician:', show.magician.name);
+        log.info('magician changed! current magician:', show.magician.name);
         showController.emit('magician-changed', show.magician.values());
     });
 
     show.on('magician-start', function() {
-        console.log('magician start!');
+        log.info('magician start!');
         showController.emit('magician-start', show.magician.values());
     });
 
     show.on('magician-score', function() {
-        console.log('magician score!');
+        log.info('magician score!');
         showController.emit('magician-score', show.magician.values());
     });
 
     show.on('magician-finish', function() {
-        console.log('magician finsh!');
+        log.info('magician finsh!');
         showController.emit('magician-finish', show.magician.values());
     });
 
     show.on('score', function() {
-        console.log('score');
+        log.info('score');
         showController.emit('score', {
             end: show.end.getTime()
         });
     });
 
     show.on('finish', function() {
-        console.log('show finished');
+        log.info('show finished');
         showController.emit('finish');
     });
 }
