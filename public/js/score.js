@@ -41,8 +41,12 @@ define(function(require) {
             var items = document.getElementsByClassName('score-item');
 
             counter = 0;
+            var predict = 0;
             show.magicians.forEach(function(magician, index) {
-                var myscore = constant.reverseScore(myscores[String(magician.id)]);
+                var myscore = '';
+                if (myscores && myscores[String(magician.id)]) {
+                    myscore = constant.reverseScore(myscores[String(magician.id)]);
+                }
 
                 var bingo = false;
                 magician.scores.forEach(function(score) {
@@ -50,6 +54,7 @@ define(function(require) {
                     if (myscore === score) {
                         $item.addClass('bingo');
                         bingo = true;
+                        predict++;
                     }
 
                     $item.html('<span>' + short_score(score) + '</span>');
@@ -61,7 +66,10 @@ define(function(require) {
                 }
             });
 
+            predict = Math.floor(predict*100/18) + '%';
             $('#score').attr('class', 'score');
+            $('.predict').text(predict);
+            $('.info').attr('class', 'info');
         });
 
         if (localStorage.mobile) {
