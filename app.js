@@ -1,14 +1,19 @@
 var MongoClient = require("mongodb").MongoClient;
+var bunyan = require('bunyan');
 var audienceCollection, round, showCollection;
+var log = bunyan.createLogger({
+    name: 'mahou',
+    path: 'log/mahou.log'
+});
 
 MongoClient.connect("mongodb://localhost:27017/mahou", function(err, db) {
     if (err) {
-        return console.error(err);
+        return log.error(err);
     }
 
     db.createCollection('audience', function(err, collection) {
         if (err) {
-            return console.error(err);
+            return log.error(err);
         }
 
         audienceCollection = collection;
@@ -17,7 +22,7 @@ MongoClient.connect("mongodb://localhost:27017/mahou", function(err, db) {
 
     db.createCollection('show', function(err, collection) {
         if (err) {
-            return console.error(err);
+            return log.error(err);
         }
 
         showCollection = collection;
@@ -25,11 +30,11 @@ MongoClient.connect("mongodb://localhost:27017/mahou", function(err, db) {
             id: 0
         }, function(err, item) {
             if (err) {
-                return console.error(err);
+                return log.error(err);
             }
 
             if (!item) {
-                return console.error('round not found');
+                return log.error('round not found');
             }
 
             round = item;
@@ -139,7 +144,7 @@ function launch() {
 
     port = argv.port || PORT;
     server.listen(port, function() {
-        console.log("listening on port", port);
+        log.info("listening on port", port);
     });
 
     var showController = io.of('/show').on("connection", function(socket) {
