@@ -18,12 +18,14 @@ var loopLogger = bunyan.createLogger({
 
 MongoClient.connect("mongodb://localhost:27017/mahou", function(err, db) {
     if (err) {
-        return log.error(err);
+        log.error(err);
+        throw err;
     }
 
     db.createCollection('audience', function(err, collection) {
         if (err) {
-            return log.error(err);
+            log.error(err);
+            throw err;
         }
 
         audienceCollection = collection;
@@ -32,7 +34,8 @@ MongoClient.connect("mongodb://localhost:27017/mahou", function(err, db) {
 
     db.createCollection('show', function(err, collection) {
         if (err) {
-            return log.error(err);
+            log.error(err);
+            throw err;
         }
 
         showCollection = collection;
@@ -40,7 +43,8 @@ MongoClient.connect("mongodb://localhost:27017/mahou", function(err, db) {
             id: 0
         }, function(err, item) {
             if (err) {
-                return log.error(err);
+                log.error(err);
+                throw err;
             }
 
             if (!item) {
@@ -154,7 +158,7 @@ function launch() {
 
     port = argv.port || PORT;
     server.listen(port, function() {
-        log.info("listening on port",port);
+        log.info("listening on port", port);
     });
 
     var showController = io.of('/show').on("connection", function(socket) {
