@@ -76,6 +76,7 @@ var showController = io.of('/show').on("connection", function(socket) {
             var data = {
                 id: params.id,
                 result: {
+                    id: show.id,
                     status: show.showStatus,
                     time: round.start.getTime()
                 }

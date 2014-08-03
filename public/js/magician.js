@@ -1,7 +1,6 @@
 define(function(require) {
     require("jquery");
     require("velocity");
-    var moment = require('moment');
     var _ = require("underscore");
     var constant = require("js/constant");
     var Backbone = require("backbone");
@@ -85,8 +84,8 @@ define(function(require) {
         this.$name.html(this.magician.get('name'));
     }
 
-    function saveCardSelection() {
-        var key = 'scores-' + moment().format('YYYY-MM-DD') + token;
+    function saveCardSelection(showId) {
+        var key = 'scores-' + showId + '-' + token;
         localStorage.setItem(key, JSON.stringify(cardSelection.toJSON()));
 
         socket.emit('score', {
@@ -95,8 +94,8 @@ define(function(require) {
         });
     }
 
-    function readCardSelection() {
-        var key = 'scores-' + moment().format('YYYY-MM-DD') + token;
+    function readCardSelection(showId) {
+        var key = 'scores-' + showId + '-' + token;
         var data = localStorage.getItem(key);
         return data ? JSON.parse(data) : {};
     }
@@ -296,16 +295,18 @@ define(function(require) {
     var showModel = new ShowModel();
 
     var cardSelection = new CardSelection();
-    cardSelection.set(readCardSelection());
-    cardSelection.on('change', function() {
-        saveCardSelection();
-    });
+
 
     var cardSelector;
     var judgeView;
     var magicianView;
 
     function onPlay(show) {
+        cardSelection.set(readCardSelection(show.id));
+        cardSelection.on('change', function() {
+            saveCardSelection(show.id);
+        });
+
         showModel.set('status', show.status);
         if (show.magician) {
             showModel.setMagician(new MagicianModel(show.magician));
