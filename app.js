@@ -39,7 +39,7 @@ MongoClient.connect("mongodb://localhost:27017/mahou", function(err, db) {
 });
 
 function ensureDB() {
-    if (!round || !audienceCollection) {
+    if (!round || !audienceCollection || !showCollection) {
         return;
     }
 
