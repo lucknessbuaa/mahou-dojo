@@ -20,13 +20,23 @@
 }
 
 .content {
-    background: url(../img/bg.png) left top no-repeat;
-    background-size: cover;
+    // background: url(../img/bg.png) left top no-repeat;
+    // background-size: 100% auto;
+    background-color: transparent;
+}
+
+.bg-wrapper {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0px;
+    left: 0px;
 }
 
 #show {
     padding-top: 60px;
     overflow: hidden;
+    z-index: 1010;
 
     @media (min-width: 360px) {
         padding-top: 100px;
@@ -42,6 +52,7 @@
         margin-left: -$timer_width/2;
         background: url(../img/timer_bg.png) center center no-repeat;
         background-size: contain;
+        z-index: 1020;
 
         .timer-inner {
             position: absolute;

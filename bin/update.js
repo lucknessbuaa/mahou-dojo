@@ -19,7 +19,7 @@ MongoClient.connect("mongodb://localhost:27017/mahou", function(err, db) {
         var CURRENT_ROUND = 0;
 
         var _date = function(seconds) {
-            var date = datetime(2014, 8, 3, 16, 50, 50);
+            var date = datetime(2014, 8, 4, 19, 40, 50);
             return new Date(date.getTime() + seconds * 1000);
         }
 
@@ -75,11 +75,11 @@ MongoClient.connect("mongodb://localhost:27017/mahou", function(err, db) {
                 start: _date(16 * UNIT),
                 avatar: '/img/magician-avatar-6.png',
                 score: _date(17 * UNIT),
-                end: _date(18 * UNIT),
+                end: _date(300 * UNIT),
                 scores: [Show.NINE, Show.JACK, Show.SEVEN]
             }],
-            score: _date(18 * UNIT),
-            end: _date(19 * UNIT),
+            score: _date(310 * UNIT),
+            end: _date(320 * UNIT),
         };
 
         collection.update({
