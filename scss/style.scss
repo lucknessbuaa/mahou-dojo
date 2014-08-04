@@ -126,15 +126,17 @@
             z-index: 2000;
             position: absolute;
             overflow: hidden;
-            @include square(100%);
             border-radius: 50%;
+            @include square(100%);
+            @include linear-gradient(#333, #AAA);
             -webkit-transform: translateZ(0);
             -webkit-mask-image: -webkit-radial-gradient(circle, white 100%, black 100%);
-            @include linear-gradient(#333, #AAA);
 
             .frontend {
+                z-index: 2001;
                 @include box-shadow(-8px 0px 35px #d50000);
-                @include linear-gradient(#FF1818, #0f0404);
+                // @include linear-gradient(#FF1818, #0f0404);
+                background: url(../img/ball.png) center bottom no-repeat;
                 position: absolute;
                 bottom: 0px;
                 left: 0px;
@@ -157,6 +159,7 @@
 
             $head-width: ($mood-width + 30px)/2;
             .magician-avatar {
+                z-index: 2011;
                 position: absolute;
                 display: block;
                 border-radius: 50%;
@@ -167,6 +170,7 @@
             }
 
             .name-wrapper {
+                z-index: 2012;
                 position: absolute;
                 background: url(../img/magician-name-bg.png) center center no-repeat;
                 width: 100%;
