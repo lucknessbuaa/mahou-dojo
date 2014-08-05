@@ -17,7 +17,11 @@
     "socket.io": "~1.0.6",
     "body-parser": "~1.5.2",
     "chalk": "~0.5.1",
-    "bunyan": "~1.0.0"
+    "bunyan": "~1.0.0",
+    "passport-local": "~1.0.0",
+    "jade": "~1.5.0",
+    "passport": "~0.2.0",
+    "express-session": "~1.7.2"
   },
   "devDependencies": {
     "requirejs": "~2.1.14",

@@ -1,6 +1,7 @@
-var MongoClient = require("mongodb").MongoClient;
+var mongo = require("./lib/mongo");
 var bunyan = require('bunyan');
 var audienceCollection, round, showCollection;
+
 var log = bunyan.createLogger({
     name: 'mahou',
     streams: [{
@@ -8,6 +9,7 @@ var log = bunyan.createLogger({
         path: 'logs/app.log'
     }]
 });
+
 var loopLogger = bunyan.createLogger({
     name: 'looper',
     streams: [{
@@ -16,7 +18,7 @@ var loopLogger = bunyan.createLogger({
     }]
 });
 
-MongoClient.connect("mongodb://localhost:27017/mahou", function(err, db) {
+mongo.connect(function(err, db) {
     if (err) {
         log.error(err);
         throw err;
@@ -70,8 +72,21 @@ function launch() {
     var events = require("events");
     var _ = require("underscore");
     var bodyParser = require("body-parser");
+    var express = require("express");
+    var session = require("express-session");
+    var morgan = require("morgan");
+    var passport = require("passport");
     var datetime = require("./lib/datetime");
     var Show = require("./lib/show");
+    var backendRouter = require("./lib/backend");
+
+    function logErrors(err, req, res, next) {
+        if (err) {
+            log.error(err.stack);
+        }
+
+        next(err);
+    }
 
     var PORT = 4000;
     var argv = require("minimist")(process.argv.slice(2), {
@@ -83,8 +98,6 @@ function launch() {
             port: PORT
         }
     });
-    var express = require("express");
-    var morgan = require("morgan");
 
     var app = express();
     var server = require('http').Server(app);
@@ -94,7 +107,16 @@ function launch() {
     app.use(bodyParser.urlencoded({
         extended: false
     }));
+    app.use(session({
+        secret: 'keyboard cat'
+    }))
+    app.use(passport.initialize());
+    app.use(passport.session());
+
+    app.engine('jade', require('jade').__express);
     app.use("/", express.static(__dirname + "/public"));
+    app.use('/backend', backendRouter);
+    app.use(logErrors);
 
     app.get("/", function(req, res) {
         if (show.showStatus == Show.SHOW_WAITING) {

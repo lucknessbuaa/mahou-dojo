@@ -1,0 +1,7 @@
+@import "public/components/bootstrap-sass-official/assets/stylesheets/bootstrap.scss";
+
+#login {
+    margin-top: 200px;
+    @include size(300px, auto);
+    @include center-block();
+}

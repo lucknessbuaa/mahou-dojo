@@ -12,7 +12,7 @@ var async = require('async');
 var pkgs = require('./pkgs');
 var rjs = require('requirejs');
 
-gulp.task('sass', function() {
+gulp.task('sass-show', function() {
     return gulp.src("scss/*.scss")
         .pipe(sass({
             errLogToConsole: true
@@ -23,6 +23,20 @@ gulp.task('sass', function() {
         }))
         .pipe(gulp.dest("public/css/"));
 });
+
+gulp.task('sass-backend', function() {
+    return gulp.src("scss/backend/*.scss")
+        .pipe(sass({
+            errLogToConsole: true
+        }))
+        .pipe(base64({
+            baseDir: 'public/css/backend',
+            maxImageSize: 48 * 1024 // 48k
+        }))
+        .pipe(gulp.dest("public/backend/css"));
+});
+
+gulp.task('sass', ['sass-show', 'sass-backend']);
 
 gulp.task("watch-sass", function() {
     gulp.watch("scss/**/*.scss", ['sass']);
