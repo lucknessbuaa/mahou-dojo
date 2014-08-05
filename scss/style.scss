@@ -245,7 +245,7 @@
             .card {
                 $card-gutter: 10px;
                 $card-width: $cards-width/4 - $card-gutter;
-                -webkit-tap-highlight-color: rgba(0,0,0,0);
+                -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
                 float: left;
                 -webkit-filter: brightness(.5);
                 margin: 0px $card-gutter/2;
