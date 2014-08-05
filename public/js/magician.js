@@ -1,7 +1,6 @@
 define(function(require) {
     require("jquery");
     require("velocity");
-    var moment = require('moment');
     var _ = require("underscore");
     var constant = require("js/constant");
     var Backbone = require("backbone");
@@ -10,10 +9,7 @@ define(function(require) {
     var token = require("js/token");
     var io = require("socket-io");
 
-    var magicians = [];
 
-    var host = window.location.hostname;
-    var socket = io.connect('http://' + host + '/show');
 
     function __error(fn) {
         return function() {
@@ -85,18 +81,19 @@ define(function(require) {
         this.$name.html(this.magician.get('name'));
     }
 
-    function saveCardSelection() {
-        var key = 'scores-' + moment().format('YYYY-MM-DD') + token;
+    function saveCardSelection(showId) {
+        var key = 'scores-' + showId + '-' + token;
         localStorage.setItem(key, JSON.stringify(cardSelection.toJSON()));
 
-        socket.emit('score', {
+        socket.emit('add-score', {
+            id: showId,
             token: token,
             score: cardSelection.toJSON()
         });
     }
 
-    function readCardSelection() {
-        var key = 'scores-' + moment().format('YYYY-MM-DD') + token;
+    function readCardSelection(showId) {
+        var key = 'scores-' + showId + '-' + token;
         var data = localStorage.getItem(key);
         return data ? JSON.parse(data) : {};
     }
@@ -151,6 +148,7 @@ define(function(require) {
         this.el = el;
         this.$el = $(el);
         this.$cards = this.$el.find('.card');
+        this.$tip = this.$el.find('.tip');
 
         var self = this;
         this.ensureCards();
@@ -160,6 +158,7 @@ define(function(require) {
 
             this.magician = showModel.get('magician');
             this.magician.once('start', _.bind(function() {
+                this.$tip.html('双击扑克牌为选手打分');
                 this.ensureCards();
             }, this));
 
@@ -187,6 +186,7 @@ define(function(require) {
                 self.$el.find('.highlighted').removeClass('highlighted');
                 $this.addClass('highlighted');
             } else {
+                self.$tip.html('已确定选牌');
                 self.cardSelection.score(self.magician.id, score);
             }
         }
@@ -290,22 +290,28 @@ define(function(require) {
     var MAGICIAN_SCORE = 'score';
     var MAGICIAN_FINISHED = 'finished';
 
+    var magicians = [];
+    var host = window.location.hostname;
+    var socket;
+
     var timer, $show;
     var magician;
     var showStatus;
     var showModel = new ShowModel();
 
     var cardSelection = new CardSelection();
-    cardSelection.set(readCardSelection());
-    cardSelection.on('change', function() {
-        saveCardSelection();
-    });
+
 
     var cardSelector;
     var judgeView;
     var magicianView;
 
     function onPlay(show) {
+        cardSelection.set(readCardSelection(show.id));
+        cardSelection.on('change', function() {
+            saveCardSelection(show.id);
+        });
+
         showModel.set('status', show.status);
         if (show.magician) {
             showModel.setMagician(new MagicianModel(show.magician));
@@ -346,6 +352,7 @@ define(function(require) {
         magicianView = new MagicianView($(".magician")[0], cardSelection);
         var connected = false;
 
+        socket = io.connect('http://' + host + '/show');
         socket.on('connect', function() {
             if (connected) {
                 console.error('Connect event is duplicated!');
