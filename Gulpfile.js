@@ -1,7 +1,6 @@
 var _ = require('underscore');
 var gulp = require("gulp");
 var sass = require("gulp-sass");
-var minifyCSS = require('gulp-minify-css');
 var uglify = require("gulp-uglify");
 var imagemin = require("gulp-imagemin");
 var pngcrush = require("imagemin-pngcrush");
@@ -20,9 +19,8 @@ gulp.task('sass', function() {
         }))
         .pipe(base64({
             baseDir: 'public/css',
-            maxImageSize: 48 * 1024 // 36k
+            maxImageSize: 48 * 1024 // 48k
         }))
-        .pipe(minifyCSS())
         .pipe(gulp.dest("public/css/"));
 });
 
