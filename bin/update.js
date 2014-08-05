@@ -19,7 +19,7 @@ MongoClient.connect("mongodb://localhost:27017/mahou", function(err, db) {
         var CURRENT_ROUND = 0;
 
         var _date = function(seconds) {
-            var date = datetime(2014, 8, 4, 19, 40, 50);
+            var date = datetime(2014, 8, 4, 21, 8, 50);
             return new Date(date.getTime() + seconds * 1000);
         }
 
