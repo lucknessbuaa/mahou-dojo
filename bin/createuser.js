@@ -9,14 +9,14 @@ var mongo = require("../lib/mongo");
 mongo.connect(function(err, db) {
     if (err) throw err;
 
-    db.collection('user', function(err, user) {
+    db.ensureIndex('user', {
+        username: 1
+    }, {
+        unique: true
+    }, function(err) {
         if (err) throw err;
 
-        user.ensureIndex({
-            username: 1
-        }, {
-            unique: true
-        }, function(err) {
+        db.collection('user', function(err, user) {
             if (err) throw err;
 
             user.insert({
@@ -33,4 +33,5 @@ mongo.connect(function(err, db) {
             })
         });
     });
+
 });
