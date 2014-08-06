@@ -178,9 +178,10 @@ function launch() {
         }
     });
 
-    port = argv.port || PORT;
+    port = parseInt(argv.port) || PORT;
     server.listen(port, function() {
         log.info("listening on port", port);
+        console.log('listening on port', port);
     });
 
     server.on('error', function(err) {

@@ -11,6 +11,7 @@ var base64 = require('gulp-base64');
 var async = require('async');
 var pkgs = require('./pkgs');
 var rjs = require('requirejs');
+var args = require('minimist')(process.argv.slice(2));
 
 gulp.task('sass-show', function() {
     return gulp.src("scss/*.scss")
@@ -46,6 +47,7 @@ gulp.task('develop', function() {
     nodemon({
         script: 'app.js',
         ext: 'html js',
+        args: ['-p', args.port],
         ignore: ['public/**/*']
     }).on('restart', function() {
         console.log('restarted!')
