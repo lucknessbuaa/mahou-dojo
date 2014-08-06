@@ -2,3 +2,7 @@ node_modules
 components
 .gulp
 logs
+build/
+builderror.log
+lib/nohup.out
+nohup.out

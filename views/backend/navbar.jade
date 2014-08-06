@@ -1,0 +1,30 @@
+-var class_nav = ['navbar', 'navbar-default', 'navbar-static-top']
+nav(class=class_nav, role='navigation')
+  div.container
+    div.navbar-header
+      button.navbar-toggle(type="button", data-toggle="collapse" data-target="#bs-example-navbar-collapse-1")
+        span.sr-only Toggle navigation
+        span.icon-bar
+        span.icon-bar
+        span.icon-bar
+      a.navbar-brand(href="/backend/show") 大魔术师
+
+    -var class_div = ['collapse', 'navbar-collapse']
+    div(class=class_div, id="bs-example-navbar-collapse-1")
+      ul(class=['nav', 'navbar-nav'])
+            li.active
+              a(href="/backend/items") items
+
+      ul(class=['nav', 'navbar-nav'], class='navbar-right')
+        li.dropdown
+          a.dropdown-toggle(href="#", data-toggle="dropdown")
+            if user
+                user.username b.caret
+            else
+                账户 
+                b.caret
+          ul.dropdown-menu
+            li
+              a(href="/backend/logout")退出
+        
+            

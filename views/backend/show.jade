@@ -3,7 +3,33 @@ html
     head
         meta(charset='utf-8')
         title= '大魔术师'
-        link(href='css/login.css', rel='stylesheet')
+        link(href='css/show.css', rel='stylesheet')
     body
-        h2= '大魔术师'
+        include ./navbar.jade
+
+        div.container
+          div.btn-toolbar
+            button.btn.btn-primary(id="create-talk")
+              span.glyphicon.glyphicon-plus
+              创建items
+
+          div.panel.panel-default
+            div.panel-heading items
+            div.panel-body 
+            div.table-container
+              table.table.table-bordered.table-striped
+                thead
+                  tr 
+                    th.name Name
+                    th.ops Ops
+                tbody
+                  tr.odd
+                    td.name class
+                    td.ops ops
+
+
+
+         
+        script.src("../../public/components/jquery/dist/jquery.js")
+        script.src("../../public/components/bootstrap-sass-official/assets/javascripts/bootstrap/dropdown.js")
 
