@@ -183,6 +183,13 @@ function launch() {
         log.info("listening on port", port);
     });
 
+    server.on('error', function(err) {
+        console.error(err.stack);
+        if (err.code === 'EADDRINUSE') {
+            process.exit(-1);
+        }
+    });
+
     var showController = io.of('/show').on("connection", function(socket) {
         socket.on('add-score', function(data) {
             log.info('client data updated', data);

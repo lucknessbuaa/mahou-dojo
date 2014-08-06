@@ -21,7 +21,7 @@ mongo.connect(function(err, db) {
 
             user.insert({
                 username: args.u,
-                password: args.p
+                password: cryptoPassword(args.p)
             }, {
                 safe: true
             }, function(err) {
